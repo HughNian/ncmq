@@ -30,7 +30,7 @@ init_skiplist(o_type flag)
 	int i;
 	sl *skiplist;
 
-	skiplist = malloc(sizeof(sl));
+	skiplist = nmalloc(sizeof(sl));
 	if(skiplist == NULL){
 		fprintf(stderr, "malloc skiplist failed msg(%s)\n", strerror(errno));
 		return NULL;
@@ -50,7 +50,7 @@ init_skiplist(o_type flag)
 
 	skiplist->level = 0;
 	skiplist->size  = 0;
-	if((skiplist->root  = (sl_node *)malloc(sizeof(sl_node) + MAX_LEVEL * sizeof(sl_node *))) == NULL){
+	if((skiplist->root  = (sl_node *)nmalloc(sizeof(sl_node) + MAX_LEVEL * sizeof(sl_node *))) == NULL){
 		fprintf(stderr, "malloc node failed msg(%s)\n", strerror(errno));
 		return NULL;
 	}
@@ -86,7 +86,7 @@ add_skiplist_node(sl *skiplist, int key, void *val)
         skiplist->level = new_level;
     }
 
-    new = (sl_node *)malloc(sizeof(*new) + new_level * sizeof(sl_node *));
+    new = (sl_node *)nmalloc(sizeof(*new) + new_level * sizeof(sl_node *));
     if(NULL == new){
     	fprintf(stderr, "new node malloc failed msg(%s)\n", strerror(errno));
     	return -1;
@@ -127,7 +127,7 @@ del_skiplist_node(sl *skiplist, int key)
     	update[i]->forward[i] = update[i]->forward[i]->forward[i];
     }
 
-    free(del);
+    nfree(del);
 
     if(skiplist->level > 0 && (skiplist->root->forward[skiplist->level] == NULL)){
     	skiplist->level--;

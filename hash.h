@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "list.h"
+#include "nmalloc.h"
 
 typedef unsigned long int ub4;
 typedef unsigned char ub1;

@@ -8,6 +8,25 @@ static int link_nums = 0;
 static int client_free_nums = 0;
 static C *client_array[CLIENT_ARRAY_SIZE];
 static struct _storage_data STORAGE_DATA;
+static sl *queue = NULL;
+
+void command_set_cache(C *client);
+void command_get_cache(C *client);
+void command_del_cache(C *client);
+void command_enqueue(C *client);
+void command_dequeue(C *client);
+void command_monitor_cache(C *client);
+void command_monitor_queue(C *client);
+
+command_opts copts[] = {
+    {"set", command_set_cache, 1},
+	{"get", command_get_cache, 0},
+	{"del", command_del_cache, 0},
+	{"enqueue", command_enqueue, 1},
+	{"dequeue", command_dequeue, 0},
+	{"mcache", command_monitor_cache, 0},
+	{"mqueue", command_monitor_queue, 0}
+};
 
 int
 set_nonblocking(int sock)
@@ -104,22 +123,35 @@ init_server()
     serv.ev.events  = EPOLLIN | EPOLLET;
     epoll_ctl(serv.epfd, EPOLL_CTL_ADD, serv.sfd, &serv.ev);
 
-    STORAGE_DATA.cache = hash_init(0);
-    if(STORAGE_DATA.cache == NULL){
-    	fprintf(stderr, "data malloc error\n");
+    nminit(100); //初始化内存管理器
+
+    STORAGE_DATA.cacheData = hash_init(0);
+    if(STORAGE_DATA.cacheData == NULL){
+    	fprintf(stderr, "cache data init error\n");
+    	epoll_ctl(serv.epfd, EPOLL_CTL_DEL, serv.sfd, &serv.ev);
     	close(serv.sfd);
     	return -1;
     }
 
-    STORAGE_DATA.queue = init_skiplist(ORDER_BY_MIN);
-    if(STORAGE_DATA.queue == NULL){
-    	fprintf(stderr, "data malloc error\n");
+    STORAGE_DATA.queueData = hash_init(0);
+    if(STORAGE_DATA.queueData == NULL){
+    	fprintf(stderr, "queue data init error\n");
+    	epoll_ctl(serv.epfd, EPOLL_CTL_DEL, serv.sfd, &serv.ev);
+    	close(serv.sfd);
+    	return -1;
+    }
+
+    queue = init_skiplist(ORDER_BY_MIN);
+    if(queue == NULL){
+    	fprintf(stderr, "queue init error\n");
+    	epoll_ctl(serv.epfd, EPOLL_CTL_DEL, serv.sfd, &serv.ev);
     	close(serv.sfd);
     	return -1;
     }
 
     if(init_mheap() < 0 ){
-    	fprintf(stderr, "data malloc error\n");
+    	fprintf(stderr, "lru init error\n");
+    	epoll_ctl(serv.epfd, EPOLL_CTL_DEL, serv.sfd, &serv.ev);
     	close(serv.sfd);
     	return -1;
     }
@@ -140,10 +172,9 @@ init_client(int cfd)
 			return -1;
 		}
 
-		client->rbuf   = malloc(DEFAULT_DATA_SIZE);
+		client->rbuf   = nmalloc(DEFAULT_DATA_SIZE);
 		client->rlimit = DEFAULT_DATA_SIZE;
 
-		//todo client->sendList
 	}
 
 	client->cfd       = cfd;
@@ -171,7 +202,7 @@ void
 free_client(C *client)
 {
 	if(client_free_nums > CLIENT_ARRAY_SIZE){
-		free(client->rbuf);
+		nfree(client->rbuf);
 		free(client);
 	} else {
 		client_array[client_free_nums++] = client;
@@ -269,6 +300,42 @@ failed:
 }
 
 void
+parse_command(C *client)
+{
+	int n=0;
+	char *cptr = client->rbuf;
+	command_arr carrs[10];
+
+    char *flag = ' ';
+    char *cmd = strchr(client->rbuf, flag);
+
+	while(cmd){
+		*cmd = '\0';
+		carrs[n].command = cptr;
+		carrs[n].len = strlen(cptr);
+		if((cptr[0] >= 65 && cptr[0] <= 90) || (cptr[0] >= 97 && cptr[0] <= 122)){
+			carrs[n].type = 1;
+		} else {
+			carrs[n].type = 2;
+		}
+		cptr = ++cmd;
+		cmd = strchr(cptr, flag);
+
+		n++;
+	}
+	carrs[n].command = cptr;
+	carrs[n].len = strlen(cptr);
+	if((cptr[0] >= 65 && cptr[0] <= 90) || (cptr[0] >= 97 && cptr[0] <= 122)){
+		carrs[n].type = 1;
+	} else {
+		carrs[n].type = 2;
+	}
+
+	client->carrs_num = ++n;
+	client->carrs = carrs;
+}
+
+void
 client_timeout()
 {
 	C *c,*n;
@@ -304,10 +371,30 @@ get_time()
 void
 server_do(struct epoll_event ee)
 {
+	int i,num;
+	command_func command_handler;
     C *client;
     client = (C *)ee.data.ptr;
     if(ee.events & EPOLLIN){
     	if(read_client(client) == -1) return;
+
+    	parse_command(client);
+
+    	num = sizeof(copts)/sizeof(copts[0]);
+		for(i = 0; i < num; i++){
+			if(!strcmp(client->carrs[0], copts[i].cmd)){
+				client->re_read = copts[i].is_re_read;
+				command_handler = copts[i].command_handler;
+				break;
+			}
+		}
+
+		if(client->re_read){
+			if(read_client(client) == -1) return;
+			client->re_read = 0;
+		}
+		client->carrs[++(client->carrs_num)] = client->rbuf;
+		command_handler(client);
 
     	client->ev.data.ptr = client;
     	client->ev.events = EPOLLOUT | EPOLLET | EPOLLONESHOT;
@@ -377,4 +464,10 @@ main(int argc, char **argv)
 	server_loop();
 
 	return 0;
+}
+
+void
+command_set_cache(C *client)
+{
+
 }

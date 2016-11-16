@@ -14,7 +14,7 @@ hash_init(int skey)
 {
     Hash_Table *hash_table;
 
-    hash_table = (Hash_Table *)malloc(sizeof(Hash_Table));
+    hash_table = (Hash_Table *)nmalloc(sizeof(Hash_Table));
     if(NULL == hash_table){
     	fprintf(stderr, "hash table malloc failed\n");
     	return NULL;
@@ -23,7 +23,7 @@ hash_init(int skey)
     hash_table->skey = skey;
     hash_table->hash_size = tableSize[skey];
     hash_table->hash_nums = 0;
-    hash_table->hashs = (Hash_Node **)malloc(sizeof(Hash_Node *) * hash_table->hash_size);
+    hash_table->hashs = (Hash_Node **)nmalloc(sizeof(Hash_Node *) * hash_table->hash_size);
     if(NULL == hash_table->hashs){
     	fprintf(stderr, "hashs malloc failed\n");
     	return NULL;
@@ -47,7 +47,7 @@ hash_resize(Hash_Table *hash_table)
 	}
 
     Hash_Node **tmp = hash_table->hashs;
-    Hash_Node **new = (Hash_Node **)malloc(sizeof(Hash_Node *) * new_size);
+    Hash_Node **new = (Hash_Node **)nmalloc(sizeof(Hash_Node *) * new_size);
     if(NULL == new){
         fprintf(stderr, "hash resize failed\n");
         return -1;
@@ -75,7 +75,7 @@ hash_resize(Hash_Table *hash_table)
     	    old = tmp;
     	}
     }
-    free(hash_table->hashs);
+    nfree(hash_table->hashs);
 
     hash_table->hashs = new;
     hash_table->hash_size = new_size;
@@ -99,23 +99,23 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
 	index = h % hash_table->hash_size;
 
 	Hash_Node *hash_node;
-    hash_node = (Hash_Node *)malloc(sizeof(Hash_Node));
+    hash_node = (Hash_Node *)nmalloc(sizeof(Hash_Node));
     if(NULL == hash_node){
     	fprintf(stderr, "hash node malloc failed\n");
     	return -1;
     }
     hash_node->index = index;
     hash_node->h     = h;
-    hash_node->kv = (Key_Val *)malloc(sizeof(Key_Val)+KEY_SIZE);
+    hash_node->kv = (Key_Val *)nmalloc(sizeof(Key_Val)+KEY_SIZE);
     if(NULL == hash_node->kv){
-    	free(hash_node);
+    	nfree(hash_node);
     	fprintf(stderr, "hash node kv malloc failed\n");
     	return -1;
     }
     key_size = strlen(key);
     if(key_size > KEY_SIZE){
-    	free(hash_node->kv);
-        free(hash_node);
+    	nfree(hash_node->kv);
+        nfree(hash_node);
         fprintf(stderr, "key size is too large");
         return -1;
     }
@@ -195,8 +195,8 @@ hash_delete(Hash_Table *hash_table, char *key)
     	prev->next = node->next;
     }
 
-    free(node->kv);
-    free(node);
+    nfree(node->kv);
+    nfree(node);
 
     hash_table->hash_nums--;
 
@@ -251,14 +251,14 @@ hash_destory(Hash_Table *hash_table)
 
     	while(node){
     		tmp = node;
-    		free(node->kv);
-    		free(node);
+    		nfree(node->kv);
+    		nfree(node);
     		node = tmp->next;
     	}
     }
 
-    free(hash_table->hashs);
-    free(hash_table);
+    nfree(hash_table->hashs);
+    nfree(hash_table);
 }
 
 #define HASH_JEN_MIX(a,b,c)                                                      \

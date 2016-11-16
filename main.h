@@ -29,6 +29,17 @@
 #define DEFAULT_DATA_SIZE 512
 #define TIMEOUT_SECONDS 300
 
+struct _storage_data {
+	Hash_Table *cacheData;
+	Hash_Table *queueData;
+} storage_data;
+
+typedef struct {
+    char *command;
+    int type;
+    int len;
+} command_arr;
+
 struct _client {
 	int cfd;
 
@@ -42,7 +53,12 @@ struct _client {
 	int wsize;
 	int wnum;
 
+	int carrs_num;
+	command_arr carrs[10];
+
 	int re_read;
+
+	void *response;
 
 	time_t cost_time;
 
@@ -51,6 +67,14 @@ struct _client {
 	struct _client *prev;
 	struct _client *next;
 } client;
+
+typedef void (*command_func)(struct _client *client);
+
+typedef struct {
+    char *cmd;
+    command_func command_handler;
+    int is_re_read;
+} command_opts;
 
 struct _server {
 	int sfd;
@@ -64,8 +88,3 @@ struct _server {
     struct epoll_event *events;
     struct epoll_event ev;
 } server;
-
-struct _storage_data {
-	Hash_Table *cache;
-	sl *queue;
-} storage_data;

@@ -1,6 +1,8 @@
 #ifndef __NMALLOC_H__
 #define __NMALLOC_H__
 
+#include "slabs.h"
+
 #define NMALLOC_SLABS  1
 #define NMALLOC_SYSTEM 2
 #define NMALLOC_POWER_BLOCK 1048576

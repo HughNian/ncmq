@@ -1,6 +1,4 @@
-#include <stdlib.h>
 #include "nmalloc.h"
-#include "slabs.h"
 
 #define NMHEAD_SIZE sizeof(nmHead)
 

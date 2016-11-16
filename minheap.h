@@ -1,6 +1,8 @@
 #ifndef __MINHEAP_H__
 #define __MINHEAP_H__
 
+#include "nmalloc.h"
+
 #define DEFAULT_DATA_SIZE 1024
 
 typedef struct _min_heap min_heap;
