@@ -31,7 +31,6 @@ typedef struct {
 	int hash_size;
 	int hash_nums;
     Hash_Node **hashs;
-    struct list_head hlist;
 } Hash_Table;
 
 typedef void (*print_hash)(Hash_Node *node, int index);

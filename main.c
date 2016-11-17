@@ -174,7 +174,6 @@ init_client(int cfd)
 
 		client->rbuf   = nmalloc(DEFAULT_DATA_SIZE);
 		client->rlimit = DEFAULT_DATA_SIZE;
-
 	}
 
 	client->cfd       = cfd;
@@ -262,10 +261,10 @@ failed:
 int
 write_client(C *client)
 {
-	int wsize;
+	int wsize,reslen;
 	client->wsize = 0;
 	client->wbuf  = NULL;
-	client->wbuf  = client->rbuf;
+	client->wbuf  = client->response;
     while(!client->writeOk){
     	wsize = client->rsize - client->wsize;
     	if(wsize == 0) break;
@@ -299,19 +298,20 @@ failed:
 	free_client(client);
 }
 
-void
+int
 parse_command(C *client)
 {
 	int n=0;
+	char *end;
 	char *cptr = client->rbuf;
 	command_arr carrs[10];
 
-    char *flag = ' ';
+    char flag = ' ';
     char *cmd = strchr(client->rbuf, flag);
 
 	while(cmd){
 		*cmd = '\0';
-		carrs[n].command = cptr;
+		carrs[n].val = cptr;
 		carrs[n].len = strlen(cptr);
 		if((cptr[0] >= 65 && cptr[0] <= 90) || (cptr[0] >= 97 && cptr[0] <= 122)){
 			carrs[n].type = 1;
@@ -323,7 +323,7 @@ parse_command(C *client)
 
 		n++;
 	}
-	carrs[n].command = cptr;
+	carrs[n].val = cptr;
 	carrs[n].len = strlen(cptr);
 	if((cptr[0] >= 65 && cptr[0] <= 90) || (cptr[0] >= 97 && cptr[0] <= 122)){
 		carrs[n].type = 1;
@@ -331,8 +331,15 @@ parse_command(C *client)
 		carrs[n].type = 2;
 	}
 
+	if(end = strchr(carrs[n].val, '\r')){
+		*(end) = '\0';
+		if(*(end+1) == '\n') *(end+1) = '\0';
+	}
+
 	client->carrs_num = ++n;
-	client->carrs = carrs;
+	memcpy(client->carrs, carrs, sizeof(carrs));
+
+	if(n < 2 || n > 3) return -1;
 }
 
 void
@@ -371,29 +378,32 @@ get_time()
 void
 server_do(struct epoll_event ee)
 {
-	int i,num;
+	int i,num,finded = 0;
 	command_func command_handler;
     C *client;
     client = (C *)ee.data.ptr;
     if(ee.events & EPOLLIN){
     	if(read_client(client) == -1) return;
 
-    	parse_command(client);
+    	if(parse_command(client) == -1) return;
 
+    	char *cmd = client->carrs[0].val;
     	num = sizeof(copts)/sizeof(copts[0]);
 		for(i = 0; i < num; i++){
-			if(!strcmp(client->carrs[0], copts[i].cmd)){
+			if(!strcmp(cmd, copts[i].cmd)){
 				client->re_read = copts[i].is_re_read;
 				command_handler = copts[i].command_handler;
+				finded = 1;
 				break;
 			}
 		}
 
-		if(client->re_read){
-			if(read_client(client) == -1) return;
-			client->re_read = 0;
+		if(!finded) return;
+
+		if(!strcmp(client->carrs[0].val, "set") && client->carrs_num == 2){
+			client->carrs[++(client->carrs_num)].val = 0;
 		}
-		client->carrs[++(client->carrs_num)] = client->rbuf;
+
 		command_handler(client);
 
     	client->ev.data.ptr = client;
@@ -468,6 +478,81 @@ main(int argc, char **argv)
 
 void
 command_set_cache(C *client)
+{
+	int ret,keysize;
+	char *key,overdue[128],*res;
+    time_t overtime;
+    overtime = time(0);
+
+    keysize = client->carrs[1].len+1;
+    key = (char *)nmalloc(keysize);
+    memcpy(key, client->carrs[1].val, client->carrs[1].len);
+
+    memcpy(overdue, client->carrs[2].val, sizeof(client->carrs[2].val));
+
+//    if(client->re_read){
+//		memset(client->rbuf, 0, client->rsize);
+//		if(read_client(client) == -1) return;
+//		client->re_read = 0;
+//	}
+
+    char *data = "caonimagebi\r\n";
+    client->rsize = strlen(data);
+    if(hash_insert(STORAGE_DATA.cacheData, key, data) == -1){
+    	res = "hash insert failed\r\n";
+    }
+
+    overtime += atoi(overdue);
+
+    add_mheap(overtime, key, 1);
+
+    res = "SET OK\r\n";
+    free(client->response);
+    client->response = strdup(res);
+
+    nfree(key);
+}
+
+void
+command_get_cache(C *client)
+{
+	int ret;
+	void *res;
+	ret = hash_find(STORAGE_DATA.cacheData, client->carrs[1].val, &res);
+	if(ret == -1 && NULL == res){
+		res = "NOT FOUND\r\n";
+	}
+	client->rsize = strlen(res);
+	free(client->response);
+	client->response = strdup(res);
+}
+
+void
+command_del_cache(C *client)
+{
+
+}
+
+void
+command_enqueue(C *client)
+{
+
+}
+
+void
+command_dequeue(C *client)
+{
+
+}
+
+void
+command_monitor_cache(C *client)
+{
+
+}
+
+void
+command_monitor_queue(C *client)
 {
 
 }

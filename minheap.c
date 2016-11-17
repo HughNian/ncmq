@@ -51,10 +51,10 @@ fliter_down(int top, int end)
 int
 init_mheap()
 {
-	mheap.data = (void **)nmalloc(sizeof(void *) * DEFAULT_DATA_SIZE);
+	mheap.data = (void **)nmalloc(sizeof(void *) * DEFAULT_HEAP_SIZE);
 	if(NULL == mheap.data) return -1;
 	mheap.size = 0;
-	mheap.max_size = DEFAULT_DATA_SIZE;
+	mheap.max_size = DEFAULT_HEAP_SIZE;
 	mheap.comp = key_comp;
 
 	return 0;

@@ -15,7 +15,7 @@ nmalloc(unsigned int size)
 	void *point;
 	unsigned char type;
 	unsigned int allocsize;
-	xHead *head;
+	nmHead *head;
 
 	allocsize = size + NMHEAD_SIZE;
 

@@ -35,7 +35,7 @@ struct _storage_data {
 } storage_data;
 
 typedef struct {
-    char *command;
+    char *val;
     int type;
     int len;
 } command_arr;
@@ -58,7 +58,7 @@ struct _client {
 
 	int re_read;
 
-	void *response;
+	char *response;
 
 	time_t cost_time;
 

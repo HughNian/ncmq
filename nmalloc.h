@@ -1,6 +1,9 @@
 #ifndef __NMALLOC_H__
 #define __NMALLOC_H__
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "slabs.h"
 
 #define NMALLOC_SLABS  1

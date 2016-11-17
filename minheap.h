@@ -3,7 +3,7 @@
 
 #include "nmalloc.h"
 
-#define DEFAULT_DATA_SIZE 1024
+#define DEFAULT_HEAP_SIZE 1024
 
 typedef struct _min_heap min_heap;
 static min_heap mheap;
