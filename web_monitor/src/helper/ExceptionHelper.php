@@ -36,8 +36,10 @@ class ExceptionHelper
         } else {
             die("系统内部错误,可开启调试模式进行调试！");
         }
+        
         // 包含异常页面模板
-        $exceptionFile =  ROOT_PATH .'Helper/Exception.tpl';
+        $exceptionFile =  ROOT_PATH . 'helper/Exception.tpl';
+        
         include $exceptionFile;
         exit;
     }

@@ -1,11 +1,11 @@
 <?php
 /**
- * index page for api
+ * index page for web monitor
  * 
- * PHP version 5.2
+ * PHP version 5.2+
  * 
- * @category  API
- * @package   API
+ * @category  WEB MONITOR
+ * @package   WEB MONITOR
  * @author    niansong
  * 
  */
@@ -15,10 +15,11 @@ setlocale(LC_ALL, 'en_US.utf-8');
 
 //常量定义
 define('ENVIRONMENT', 'development');
-defined('APP_PATH') or define('APP_PATH', 'api' . DIRECTORY_SEPARATOR);
+defined('APP_PATH') or define('APP_PATH', 'src' . DIRECTORY_SEPARATOR);
 defined('ROOT_PATH') or define('ROOT_PATH', $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . APP_PATH);
 defined('PUBLIC') or define('PUBLIC', 'public' . DIRECTORY_SEPARATOR);
 defined('STATICS') or define('STATICS', 'statics' . DIRECTORY_SEPARATOR);
+defined('TPL') or define('TPL', 'view' . DIRECTORY_SEPARATOR);
 defined('APP_DEBUG') or define('APP_DEBUG', true); // 是否调试模式
 defined('EXT') or define('EXT', '.php');
 define('IS_CLI',PHP_SAPI=='cli'? 1 : 0);
@@ -41,5 +42,6 @@ if (defined('ENVIRONMENT'))
 	}
 }
 
+require APP_PATH . 'vendors/smarty/Smarty.class.php';
 require_once APP_PATH . "boot". EXT;
 ?>

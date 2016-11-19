@@ -119,8 +119,10 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
         fprintf(stderr, "key size is too large");
         return -1;
     }
+
     hash_node->kv->dsize = strlen(data) + 1;
-    hash_node->kv->data = data;
+    hash_node->kv->data = (char *)nmalloc(hash_node->kv->dsize);
+    memcpy(hash_node->kv->data, data, hash_node->kv->dsize);
     memcpy(hash_node->kv->key, key, key_size+1);
     hash_node->kv->key[key_size] = '\0';
 
@@ -195,6 +197,7 @@ hash_delete(Hash_Table *hash_table, char *key)
     	prev->next = node->next;
     }
 
+    nfree(node->kv->data);
     nfree(node->kv);
     nfree(node);
 

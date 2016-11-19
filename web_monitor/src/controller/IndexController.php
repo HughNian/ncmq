@@ -11,131 +11,143 @@ defined('APP_PATH') or die('No direct access allowed.');
  */
 class IndexController extends BaseController
 {
+	public function __construct()
+	{
+		parent::__construct();
+		$tplDir = ROOT_PATH . TPL . 'Index/';
+		$this->_tpl->setTemplateDir($tplDir);
+		
+	}
+	
     /**
-     * @todo 右侧主页面内容
-     * 
+     * 首页登陆页面
      *
      */
-    public function Right($G = array())
+    public function index($G = array())
     {
-        $data = array();
-        $arcTypeModel   = M('Arctype');
-        $archivesModel  = M('Archives');
-        $logoWallModel  = M('LogoWall');
-        
-        //轮播图片数据
-        $data['lunbo'] = $archivesModel->getLubo();
-        //首页模板库数据
-        $data['tpl']   = $archivesModel->getIndexTpl();
-        //润云动态数据
-        $data['dynamic'] = $archivesModel->getIndexDynamic();
-        //合作加盟数据
-        $data['portfolio'] = $arcTypeModel->getIndexPortfolio();
-        //获取logo墙数据
-        $data['logowall'] = $logoWallModel->getLogoWall();
-        //关于润云数据
-        $data['about'] = $arcTypeModel->getIndexAbout();
-        //菜单名称
-        $data['menu'] = $arcTypeModel->getFirstType();
-        
-        //返回数据
-        $this->ret_val['data'] = $data;
-        $this->result();
+    	$this->_tpl->assign('charset', 'utf-8');
+    	$this->_tpl->assign('title', 'ncmq监控系统');
+        $this->_tpl->display('login.html');
     }
     
     /**
-     * @todo 左侧页面内容
+     * 登陆功能
      * 
      */
-    public function Left($G = array())
+    public function login()
     {
-        $data = array();
-        $arcTypeModel = M('Arctype');
-        $sysConfigModel = M('SysConfig');
-        
-        //菜单数据
-        $data['menu'] = $arcTypeModel->getFirstType();
-        array_unshift($data['menu'], array("id"=>-1, "typename"=>"首页"));
-        array_push($data['menu'], array("id"=>-1, "typename"=>"联系我们"));
-        //站点设置数据
-        $data['siteinfo'] = $sysConfigModel->getinfo();
-        
-        //返回数据
-        $this->ret_val['data'] = $data;
-        $this->result();
+    	$username = $this->postp('username');
+    	$password = $this->postp('password');
+    	
+    	$userexists = 0;
+    	$userid = 0;
+    	foreach(C('admin_user') as $id => $user){
+    		if($user['username'] == $username){
+    			$userexists = 1;
+    			$userid = $id;
+    			break;
+    		}
+    	}
+	
+    	if(!$userexists)
+    		redirect('/Index/index', 3, '用户不存在');
+    	if(C('admin_user')[$userid]['passward'] != md5($password))
+    		redirect('/Index/index', 3, '用户密码不正确');
+    	
+    	$this->saveUser($userid, $username);
+    	
+    	redirect('/Index/main');
     }
     
     /**
-     * @todo 获取友情链接
+     * 系统主界面
      * 
      */
-    public function Links($G = array())
+    public function main()
     {
-        $flinkModel = M('Flink');
-        
-        //友情链接数据
-        $data = $flinkModel->getLinks(2);
-        
-        //返回数据
-        $this->ret_val['data'] = $data;
-        $this->result();
+    	if(!$this->checkLogin())
+    		redirect('/Index/index');
+    	
+    	$data = C('menu');
+    	$menus;
+    	foreach($data as $key => $val){
+    		if($val['pid'] == 0){
+    			$menus[$val['id']] = $val;
+    		} else {
+    			foreach($menus as $k => $v){
+    				if($v['id'] == $val['pid']){
+    					$menus[$k]['items'][] = $val;
+    				}
+    			}
+    		}
+    	}
+    	$userInfo = $this->getUserInfo();
+    	
+    	$this->_tpl->assign('menu', json_encode($menus));
+    	$this->_tpl->assign('userinfo', (object)$userInfo);
+    	$this->_tpl->display('main.html');
     }
     
     /**
-     * @todo 提交需求信息
+     * 后台首页
      * 
      */
-    public function Demand($G = array())
+    public function default()
     {
-        //参数检测
-        //$this->check('name,telephone,email');
-        
-        $feedbackModel = M('FeedBack');
-        
-        $name      = isset($G['name']) ? $G['name'] : '';
-        $telephone = isset($G['telephone']) ? $G['telephone'] : '';
-        $email     = isset($G['email']) ? $G['email'] : '';
-        $company   = isset($G['company']) ? $G['company'] : '';
-        $msg       = isset($G['msg']) ? $G['msg'] : '';
-        
-        if(!$name){
-            $this->error(100, '请输入姓名');
-        }
-
-        if(!$telephone){
-            $this->error(101, '请输入手机号');
-        }
-        
-        if(!$email){
-            $this->error(102, '请输入邮箱');
-        }
-        
-        if(!UtilityHelper::checkPhoneNum($telephone)){
-            $this->error(103, '手机号码格式不正确');
-        }
-        
-        if(!UtilityHelper::checkEmail($email)){
-            $this->error(104, '邮箱格式不正确');
-        }
-        
-        //安全过滤
-        $name    = UtilityHelper::h($name);
-        $company = UtilityHelper::h($company);
-        $msg     = UtilityHelper::h($msg);
-        
-        //插入数据
-        $data = array(
-            'username'  => $name,
-            'telephone' => $telephone,
-            'email'     => $email,
-            'company'   => $company,
-            'ip'        => UtilityHelper::getip(),
-            'msg'       => $msg
-        );
-        $feedbackModel->data($data)->insert();
-        
-        //返回数据
-        $this->ret_val['data'] = array();
-        $this->result();
+    	$sysinfo = array(
+    			'system_version'  => '0.0.1',
+    			'php_version'     => PHP_VERSION,
+    			'server_software' =>  php_uname(),
+    			'max_upload'      => ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'Disabled',
+    			'max_excute_time' => intval(ini_get('max_execution_time')) . ' seconds',
+    	);
+    	
+    	$this->_tpl->assign('title', 'ncmq监控系统');
+    	$this->_tpl->assign('sysinfo', $sysinfo);
+    	$this->_tpl->display('default.html');
+    }
+    
+    /**
+     * 缓存监控
+     * 
+     */
+    public function mcache()
+    {
+    	$ncmqModel = M('Ncmq');
+    	
+    	$cacheJson = $ncmqModel->mcache();
+    	
+    	$cacheArr = json_decode($cacheJson, 1);
+    	
+    	$data = array();
+    	foreach($cacheArr as $val){
+    		$key = key($val);
+    		$value = current($val);
+    		$data[$key][] = $value;
+    	}
+    	
+    	$this->_tpl->assign('data', $data);
+    	$this->_tpl->display('mcache.html');
+    }
+    
+    /**
+     * 队列监控
+     * 
+     */
+    public function mqueue()
+    {
+    	
+    }
+    
+    /**
+     * 退出
+     * 
+     */
+    public function logout()
+    {
+    	session_unset();
+		session_destroy();
+    	
+    	redirect('/Index/index');
     }
 }

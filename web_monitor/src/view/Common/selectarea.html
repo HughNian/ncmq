@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<!--{include file="../Common/head.html"}-->
+</head>
+<body style="width:330px;background:#fff;">
+<div id="J_move_pop" class="">
+	<div class="core_pop">
+		<div>
+			<div class="pop_cont">
+				<center>
+				<select size="5" style="vertical-align:top;height:200px;" class="select_4" name="category_ids">
+					<!--{foreach from=$list key=key item=val}-->
+					<option value="<!--{$val.id}-->" data-name="<!--{$val.name}-->" <!--{if $select == $val.id}-->selected<!--{/if}-->><!--{$val.name}--></option>
+					<!--{/foreach}-->
+				</select>
+				</center>
+			</div>
+			<div class="pop_bottom">
+				<center><button type="button" class="btn btn_submit ">确定</button></center>
+			</div>
+		</div>
+	</div>
+</div>
+<!--{include file="../Common/footer.html"}-->
+<script>
+$(function(){
+	$(".btn").click(function(){
+		var _this = $(this);
+		var industry = $(".select_4").val();
+		var industryname = $(".select_4").find("option:selected").text();
+		if(industry === null|| industryname === ""){
+			$(".tips_error").remove();
+			$('<span class="tips_error">请选择领域</span>' ).appendTo(_this.parent()).fadeIn( 'fast' );
+		} else if (window.parent.Wind.dialog) {
+			//$("#J_select_area_btn", window.parent.document).remove()
+			$("#J_select_area_btn", window.parent.document).text(industryname);
+			$("#area_id", window.parent.document).val(industry);
+			window.parent.Wind.dialog.closeAll();
+		}
+	});
+});
+</script>
+</body>
+</html>

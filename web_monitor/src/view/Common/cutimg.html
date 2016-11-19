@@ -1,0 +1,116 @@
+<html>
+<head>
+<script type="text/javascript" src="/Public/js/jquery-1.6.4.min.js" ></script>
+<script type="text/javascript" src="/Public/js/admin/jcrop/jquery.Jcrop.js" ></script>
+<link href="/Public/js/admin/jcrop/css/jquery.Jcrop.css" rel="stylesheet" />
+<link href="/Public/js/admin/jcrop/css/demos.css" rel="stylesheet" />
+<link href="/Public/css/admin/admin_style.css?v20130702" rel="stylesheet" />
+<script type="text/javascript">
+
+var _x, _y, _w, _h; 
+
+
+// Remember to invoke within jQuery(window).load(...)
+// If you don't, Jcrop may not initialize properly
+var t_width=150,t_height;
+jQuery(window).load(function(){
+	var width = "<!--{$img_size.width}-->";
+	var height = "<!--{$img_size.height}-->";
+	t_height =t_width*height/width;
+	jQuery('#previewdiv').attr("style", 'overflow:hidden;margin-left:50px;width:'+t_width+'px;height:'+t_height+'px;');
+	jQuery('#cropbox').Jcrop({
+        minSize: [width,height],
+        setSelect:[0,0,width,height],
+        allowSelect: false,
+		onChange: showPreview,
+		onSelect: showPreview,
+		aspectRatio: width/height,
+		boxWidth: 450, 
+		boxHeight: 400
+	});
+});
+
+// Our simple event handler, called from onChange and onSelect
+// event handlers, as per the Jcrop invocation above
+function showPreview(coords)
+{
+	var width = "<!--{$img_info.0}-->",height = "<!--{$img_info.1}-->";
+	if (parseInt(coords.w) > 0)
+	{
+		var rx = t_width / coords.w;
+		var ry = t_height / coords.h;
+
+		jQuery('#preview').css({
+			width: Math.round(rx * width) + 'px',
+			height: Math.round(ry * height) + 'px',
+			marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+			marginTop: '-' + Math.round(ry * coords.y) + 'px'
+		});
+	}
+	_x = coords.x;
+	_y = coords.y;
+	_w = coords.w;
+	_h = coords.h;
+}
+</script>
+</head>
+<body style="width:700px;" class="body_none">
+<div id="outer" style="overflow-x:hidden">
+<div class="jcExample">
+<div class="article">
+	<table>
+	<tr>
+	<td>
+		<img src="<!--{$imgsrc}-->" id="cropbox" />
+	</td>
+	<td>
+	<div style="overflow:hidden;margin-left:50px;" id="previewdiv">
+		<img src="<!--{$imgsrc}-->" id="preview" />
+	</div>
+	</td>
+	</tr>
+	</table>
+</div>
+<div class="pop_bottom">
+	<button type="button" class="btn btn_submit mr10" id="J_topic_btn">提交</button>
+</div>
+</div>
+</div>
+<script>
+$(function(){
+	$(".btn").click(function(){
+		var _this  = $(this);
+		var imgsrc  = "<!--{$imgsrc}-->";
+		var imgPath = "<!--{$imgPath}-->";		
+		var mtype   = "<!--{$mtype}-->";
+		var imgdomid = "<!--{$imgdomid}-->";
+		var imgid = "<!--{$imgid}-->";
+		if(imgdomid=='') imgdomid = 'image';
+		
+		$.post('/common/docutimg', {'x':_x, 'y':_y, 'w':_w, 'h':_h, 'imgsrc':imgsrc, 'imgPath':imgPath}, function(data){
+			var result = eval("("+data+")");
+			if(result.ret){
+				if(mtype === "add"){
+					//$("#"+imgdomid, window.parent.document).remove();
+					var html = '<img title="点击修改" data-type="middle" src="'+result.imgsrc+'" class="face">';
+					$("#"+imgdomid, window.parent.document).val(imgid);
+					$("#add"+imgdomid, window.parent.document).html(html);
+					$("#add"+imgdomid, window.parent.document).removeClass('btn');
+				} else if(mtype === "edit") {
+					var html = '<img title="点击修改" data-type="middle" src="'+result.imgsrc+'" class="face">';
+					$("#"+imgdomid, window.parent.document).val(imgid);
+					$("#add"+imgdomid, window.parent.document).html(html);
+				}
+				$(".tips_success", window.parent.document).remove();
+				$(".tips_error", window.parent.document).remove();
+				$(".btn_wrap_pd", window.parent.document).append('<span class="tips_success">裁剪成功</span>').fadeIn();
+				window.parent.Wind.dialog.closeAll();
+			} else {
+				$('<span class="tips_error">裁剪失败</span>' ).appendTo(_this.parent()).fadeIn( 'fast' );
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

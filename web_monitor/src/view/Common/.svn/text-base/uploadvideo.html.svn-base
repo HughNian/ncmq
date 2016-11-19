@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<!--{include file="../Common/head.html"}-->
+<!-- Force latest IE rendering engine or ChromeFrame if installed -->
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+<meta charset="utf-8">
+<title>上传视频</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap styles -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<!-- Generic page styles -->
+<link rel="stylesheet" href="/Public/css/admin/jupload/style.css">
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet" href="/Public/css/admin/jupload/jquery.fileupload-ui.css">
+</head>
+<body style="width:700px;" class="body_none">
+<div class="table_full pop_cont pop_table" style="height:250px;overflow-x:hidden">
+<div class="container">
+    <!-- The fileinput-button span is used to style the file input field as button -->
+    <span class="btn btn-success fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>选择文件</span>
+        <!-- The file input field used as target for the file upload widget -->
+        <input id="fileupload" type="file" name="files[]" multiple>
+    </span>
+    <br>
+    <br>
+    <!-- The global progress bar -->
+    <div id="progress" class="progress">
+        <div class="progress-bar progress-bar-success"></div>
+    </div>
+    <!-- The container for the uploaded files -->
+    <div id="files" class="files"></div>
+    <br>
+</div>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/Public/js/admin/jupload/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/Public/js/admin/jupload/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/Public/js/admin/jupload/jquery.fileupload.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script>
+/*jslint unparam: true */
+/*global window, $ */
+$(function () {
+    'use strict';
+    // Change this to the location of your server-side upload handler:
+    var url = '/common/douploadvideo?videopath=<!--{$videopath}-->';
+    $('#fileupload').fileupload({
+        url: url,
+        dataType: 'json',
+        done: function (e, data) {
+            $.each(data.result.files, function (index, file) {
+                //$('<p/>').text("视频上传完成!").appendTo('#files');
+				if(file.error == 'typeerror'){
+					$(".tips_success", window.parent.document).remove();
+					$(".tips_error", window.parent.document).remove();
+					$(".btn_wrap_pd", window.parent.document).append('<span class="tips_error">文件格式不正确</span>').fadeIn();
+					window.parent.Wind.dialog.closeAll();
+				} else {
+					$("#video", window.parent.document).val(file.name);
+					$("#videourl", window.parent.document).val(file.url);
+					$("#addvideo", window.parent.document).hide();
+					$("#videodiv", window.parent.document).text(file.name);
+					$(".tips_success", window.parent.document).remove();
+					$(".tips_error", window.parent.document).remove();
+					$(".btn_wrap_pd", window.parent.document).append('<span class="tips_success">视频上传完成！</span>').fadeIn();
+					window.parent.Wind.dialog.closeAll();
+				}
+            });
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progress .progress-bar').css(
+                'width',
+                progress + '%'
+            );
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+});
+</script>
+<!--{include file="../Common/footer.html"}-->
+</body>
+</html>

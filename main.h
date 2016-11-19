@@ -1,4 +1,7 @@
 /**
+ * Copyright (c) 2016, niansong <Hugh.Nian@163.com>
+ * All rights reserved.
+ *
  * niansong's [memory cache & message queue] project for nju's paper
  *
  * this project successfully compiled in ubuntu14.4, gcc4.8.4
@@ -20,6 +23,7 @@
 #include "hash.h"
 #include "minheap.h"
 #include "skiplist.h"
+#include "cJSON.h"
 
 #define SERVER_PORT 21666
 #define EPOLL_EVENTS_NUMS 500

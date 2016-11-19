@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<!--{include file="../Common/head.html"}-->
+</head>
+<body style="width:700px;" class="body_none">
+<!--添加专题课程-->
+	<form class="J_ajaxForm" data-role="list" action="/common/douploadimg" method="post" >
+	<input type="hidden" value="<!--{$imgpath}-->" name="imgpath" />
+	<input type="hidden" value="<!--{$mtype}-->" name="mtype"/>
+	<input type="hidden" value="<!--{$imgdomid}-->" name="imgdomid">
+	<div class="table_full pop_cont pop_table" style="overflow-x:hidden">
+		<table width="100%">
+			<col class="th"/>
+			<col />
+			<thead>
+			<tr>
+				<th>上传图片</th>
+				<td>
+					<div><img id="J_image_preview_big" style="display: none; max-width: 300px;"></div>
+					<div class="single_image_up"><a href="">上传图片</a><input data-preview="#J_image_preview_big" name="image" type="file" class="J_upload_preview"></div>
+				    <div>(宽度>=<b><!--{$uploadsize.width}--></b>px,高度>=<b><!--{$uploadsize.height}--></b>px)</div>
+					<div>(上传图片格式为jpg,gif,png,图片大小不能超过2M)</div>
+				</td>
+			</tr>
+			</thead>
+		</table>
+	</div>
+	<div class="pop_bottom">
+		<button type="button" class="btn fr" id="J_dialog_close">取消</button>
+		<button type="submit" class="btn btn_submit mr10 fr J_ajax_submit_btn">提交</button>
+	</div>
+	
+</form>
+<!--{include file="../Common/footer.html"}-->
+</body>
+</html>

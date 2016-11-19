@@ -219,8 +219,7 @@ read_client(C *client)
     	switch(client->rnum){
     		case -1:
     			if(errno == EAGAIN || errno == EWOULDBLOCK){
-    				client->readOk = 1;
-    				break;
+    				continue;
     			} else {
     				fprintf(stderr, "client read error msg1 (%s)\n", strerror(errno));
     				goto failed;
@@ -331,15 +330,68 @@ parse_command(C *client)
 		carrs[n].type = 2;
 	}
 
-	if(end = strchr(carrs[n].val, '\r')){
+	end = strchr(carrs[n].val, '\r');
+	while(end){
 		*(end) = '\0';
 		if(*(end+1) == '\n') *(end+1) = '\0';
+
+		++end;
+		end = strchr(end, '\r');
 	}
 
 	client->carrs_num = ++n;
 	memcpy(client->carrs, carrs, sizeof(carrs));
 
-	if(n < 2 || n > 3) return -1;
+	if(n > 3) return -1;
+}
+
+char *
+json_encode(Hash_Table *hash_table)
+{
+    cJSON *jsonRoot = NULL;
+    cJSON *subJson = NULL;
+    void *val;
+    int i;
+    Hash_Node *node;
+    char *ret, key[hash_table->hash_size];
+
+    jsonRoot = cJSON_CreateObject();
+
+    if(NULL == jsonRoot){
+    	printf("create json failed\n");
+    	return NULL;
+    }
+
+    for(i=0; i < hash_table->hash_size; i++){
+        node = hash_table->hashs[i];
+
+        int n = 0;
+        while(node){
+        	n++;
+        	subJson = cJSON_CreateObject();
+        	if(NULL == subJson){
+				printf("create subjson failed\n");
+				return NULL;
+			}
+        	sprintf(key, "%d", i+n);
+        	cJSON_AddStringToObject(subJson, node->kv->key, (char *)node->kv->data);
+        	cJSON_AddItemToObject(jsonRoot, key, subJson);
+
+			node = node->next;
+        }
+    }
+
+    ret = cJSON_Print(jsonRoot);
+
+    if(NULL == ret){
+    	printf("json ret failed\n");
+        cJSON_Delete(jsonRoot);
+        return NULL;
+    }
+
+    cJSON_Delete(jsonRoot);
+
+    return ret;
 }
 
 void
@@ -490,17 +542,23 @@ command_set_cache(C *client)
 
     memcpy(overdue, client->carrs[2].val, sizeof(client->carrs[2].val));
 
-//    if(client->re_read){
-//		memset(client->rbuf, 0, client->rsize);
-//		if(read_client(client) == -1) return;
-//		client->re_read = 0;
-//	}
+    if(client->re_read){
+		if(read_client(client) == -1) return;
+		client->re_read = 0;
+	}
 
-    char *data = "caonimagebi\r\n";
-    client->rsize = strlen(data);
-    if(hash_insert(STORAGE_DATA.cacheData, key, data) == -1){
-    	res = "hash insert failed\r\n";
+    char *data;
+    if(client->rsize > 0){
+    	data = (char *)nmalloc(client->rsize);
+    	memcpy(data, client->rbuf, client->rsize);
     }
+
+	if(hash_insert(STORAGE_DATA.cacheData, key, data) == -1){
+		res = "hash insert failed\r\n";
+	}
+
+	void *val;
+	hash_find(STORAGE_DATA.cacheData, key, &val);
 
     overtime += atoi(overdue);
 
@@ -508,9 +566,11 @@ command_set_cache(C *client)
 
     res = "SET OK\r\n";
     free(client->response);
+    client->rsize = strlen(res);
     client->response = strdup(res);
 
     nfree(key);
+    nfree(data);
 }
 
 void
@@ -518,12 +578,20 @@ command_get_cache(C *client)
 {
 	int ret;
 	void *res;
-	ret = hash_find(STORAGE_DATA.cacheData, client->carrs[1].val, &res);
-	if(ret == -1 && NULL == res){
+	int keysize;
+	char *key;
+
+	 keysize = client->carrs[1].len+1;
+	 key = (char *)nmalloc(keysize);
+	 memcpy(key, client->carrs[1].val, client->carrs[1].len);
+
+	ret = hash_find(STORAGE_DATA.cacheData, key, &res);
+	if(ret == -1){
 		res = "NOT FOUND\r\n";
 	}
-	client->rsize = strlen(res);
+
 	free(client->response);
+	client->rsize = strlen(res);
 	client->response = strdup(res);
 }
 
@@ -548,11 +616,29 @@ command_dequeue(C *client)
 void
 command_monitor_cache(C *client)
 {
+    char *res;
+    res = json_encode(STORAGE_DATA.cacheData);
 
+    if(NULL == res){
+    	res = "cache json failed\n";
+    }
+
+    free(client->response);
+    client->rsize = strlen(res);
+    client->response = strdup(res);
 }
 
 void
 command_monitor_queue(C *client)
 {
+	char *res;
+	res = json_encode(STORAGE_DATA.queueData);
 
+	if(NULL == res){
+		res = "cache json failed\n";
+	}
+
+	free(client->response);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
 }
