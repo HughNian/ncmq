@@ -71,15 +71,21 @@ function start()
     $CON_ACT = isset($_GET['c']) ? $_GET['c'] : false;
     
     if(!$CON_ACT){
-    	exit('missing params!');
+    	$CON = 'Index';
+    	//exit('missing params!');
     }
     
     $cas = explode('/', $CON_ACT);
     if(isset($cas[1])){
     	$CON = $cas[1];
+    } else {
+    	$CON = 'Index';
     }
+    
     if(isset($cas[2])){
     	$ACT = $cas[2];
+    } else {
+    	$ACT = 'index';
     }
     
     global $G;

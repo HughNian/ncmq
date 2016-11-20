@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-19 20:31:01
+/* Smarty version 3.1.30, created on 2016-11-20 18:42:45
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Common/head.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5830460527f636_45627797',
+  'unifunc' => 'content_58317e254f8686_01109940',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'f7ce84368a45b02340e74d6629d48f66e7e3e607' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Common/head.html',
-      1 => 1479558659,
+      1 => 1479638562,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5830460527f636_45627797 (Smarty_Internal_Template $_smarty_tpl) {
+function content_58317e254f8686_01109940 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -43,10 +43,14 @@ var GV = {
 <?php echo '</script'; ?>
 >
 <link href="/public/css/admin/admin_style.css?v20130702" rel="stylesheet" />
+<link href="/public/css/admin/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
 <?php echo '<script'; ?>
  src="/public/js/admin/wind.js?v20130702"><?php echo '</script'; ?>
 >
 <?php echo '<script'; ?>
  src="/public/js/admin/jquery.js?v20130702"><?php echo '</script'; ?>
+>
+<?php echo '<script'; ?>
+ type="text/javascript" src="/public/js/jquery.ztree.core-3.5.min.js"><?php echo '</script'; ?>
 ><?php }
 }

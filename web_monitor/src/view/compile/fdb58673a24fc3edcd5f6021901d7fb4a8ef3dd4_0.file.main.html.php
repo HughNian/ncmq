@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-19 20:28:45
+/* Smarty version 3.1.30, created on 2016-11-20 22:25:21
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/main.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5830457da49813_00591698',
+  'unifunc' => 'content_5831b2513e07d8_63232923',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'fdb58673a24fc3edcd5f6021901d7fb4a8ef3dd4' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/main.html',
-      1 => 1479558262,
+      1 => 1479651913,
       2 => 'file',
     ),
   ),
@@ -21,7 +21,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../Common/footer.html' => 1,
   ),
 ),false)) {
-function content_5830457da49813_00591698 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5831b2513e07d8_63232923 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -77,7 +77,7 @@ var GV = {
 			<noscript><h1 class="noscript">您已禁用脚本，这样会导致页面不可用，请启用脚本后刷新页面</h1></noscript>
 			<table width="100%" height="100%" style="table-layout:fixed;">
 				<tr class="head">
-					<th><a href="/index" class="logo">管理中心</a></th>
+					<th><a href="/Index/main" class="logo">管理中心</a></th>
 					<td>
 					<div class="nav">
 						<!-- 菜单异步获取，采用json格式，由js处理菜单展示结构 -->

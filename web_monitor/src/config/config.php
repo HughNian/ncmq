@@ -4,6 +4,8 @@ defined('APP_PATH') or die('No direct access allowed.');
 //配置
 return $config = array
 (
+	'sys_name' => 'ncmq监控系统',
+		
 	//是否链接数据 1-是，0-否
 	'db_conn' => 0,
 		

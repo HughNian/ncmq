@@ -373,7 +373,7 @@ json_encode(Hash_Table *hash_table)
 				printf("create subjson failed\n");
 				return NULL;
 			}
-        	sprintf(key, "%d", i+n);
+        	sprintf(key, "%d%d", i, n);
         	cJSON_AddStringToObject(subJson, node->kv->key, (char *)node->kv->data);
         	cJSON_AddItemToObject(jsonRoot, key, subJson);
 
