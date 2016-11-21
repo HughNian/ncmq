@@ -168,6 +168,24 @@ class IndexController extends BaseController
     }
     
     /**
+     * 缓存管理页面
+     * 
+     */
+   	public function managercache()
+   	{
+   		
+   	}
+   	
+   	/**
+   	 * 队列管理页面
+   	 * 
+   	 */
+   	public function managerqueue()
+   	{
+   		
+   	}
+    
+    /**
      * 退出
      * 
      */

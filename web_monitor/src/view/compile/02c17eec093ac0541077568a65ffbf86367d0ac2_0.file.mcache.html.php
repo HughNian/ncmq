@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-20 20:44:40
+/* Smarty version 3.1.30, created on 2016-11-20 23:00:31
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_58319ab887b509_50628921',
+  'unifunc' => 'content_5831ba8fa796a5_49598107',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '02c17eec093ac0541077568a65ffbf86367d0ac2' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html',
-      1 => 1479645879,
+      1 => 1479653959,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../Common/footer.html' => 1,
   ),
 ),false)) {
-function content_58319ab887b509_50628921 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5831ba8fa796a5_49598107 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -49,7 +49,7 @@ function content_58319ab887b509_50628921 (Smarty_Internal_Template $_smarty_tpl)
 			<thead>
 				<tr>
 					<td width="18%">key值</td>
-					<td>缓存数据</td>
+					<td>缓存数据表</td>
 				</tr>
 			</thead>
 			<tbody id="J_tag_list">
