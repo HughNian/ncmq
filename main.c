@@ -9,6 +9,7 @@ static int client_free_nums = 0;
 static C *client_array[CLIENT_ARRAY_SIZE];
 static struct _storage_data STORAGE_DATA;
 static sl *queue = NULL;
+static Hash_Table *queue_time_key;
 
 void command_set_cache(C *client);
 void command_get_cache(C *client);
@@ -149,6 +150,14 @@ init_server()
     	return -1;
     }
 
+    queue_time_key = hash_init(0);
+    if(queue_time_key == NULL){
+		fprintf(stderr, "queue init error\n");
+		epoll_ctl(serv.epfd, EPOLL_CTL_DEL, serv.sfd, &serv.ev);
+		close(serv.sfd);
+		return -1;
+	}
+
     if(init_mheap() < 0 ){
     	fprintf(stderr, "lru init error\n");
     	epoll_ctl(serv.epfd, EPOLL_CTL_DEL, serv.sfd, &serv.ev);
@@ -260,33 +269,58 @@ failed:
 int
 write_client(C *client)
 {
-	int wsize,reslen;
+	char header[32];
+	int whsize,wsize,reslen;
+	int read_body = 0;
 	client->wsize = 0;
 	client->wbuf  = NULL;
 	client->wbuf  = client->response;
-    while(!client->writeOk){
-    	wsize = client->rsize - client->wsize;
-    	if(wsize == 0) break;
-    	client->wnum = write(client->cfd, client->wbuf, wsize);
-    	switch(client->wnum){
-    		case -1:
-    			if(errno == EAGAIN || errno == EWOULDBLOCK){
-    				client->writeOk = 1;
-    				break;
-    			}
-    			fprintf(stderr, "client write error msg (%s)\n", strerror(errno));
-    			goto failed;
-    			break;
-    		case 0:
-    			fprintf(stderr, "client write error msg (%s)\n", strerror(errno));
-    			goto failed;
-    			break;
-    		default:
-    			client->wbuf  += client->wnum;
-    			client->wsize += client->wnum;
-    			break;
-    	}
-    }
+	sprintf(header, "%d\r\n", client->data_size);
+
+	while(1){
+		whsize = write(client->cfd, header, strlen(header));
+		if (whsize == -1) {
+			if (errno != EAGAIN && errno != EWOULDBLOCK) {
+				goto failed;
+				break;
+			}
+			return -1;
+		} else if (whsize == 0) {
+			goto failed;
+			break;
+		}
+
+		if(whsize == strlen(header)){
+			read_body = 1;
+			break;
+		}
+	}
+
+	if(read_body){
+		while(!client->writeOk){
+			wsize = client->rsize - client->wsize;
+			if(wsize == 0) break;
+			client->wnum = write(client->cfd, client->wbuf, wsize);
+			switch(client->wnum){
+				case -1:
+					if(errno == EAGAIN || errno == EWOULDBLOCK){
+						client->writeOk = 1;
+						break;
+					}
+					fprintf(stderr, "client write error msg (%s)\n", strerror(errno));
+					goto failed;
+					break;
+				case 0:
+					fprintf(stderr, "client write error msg (%s)\n", strerror(errno));
+					goto failed;
+					break;
+				default:
+					client->wbuf  += client->wnum;
+					client->wsize += client->wnum;
+					break;
+			}
+		}
+	}
 
     return 0;
 
@@ -346,11 +380,10 @@ parse_command(C *client)
 }
 
 char *
-json_encode(Hash_Table *hash_table)
+json_encode4Hash(Hash_Table *hash_table)
 {
     cJSON *jsonRoot = NULL;
     cJSON *subJson = NULL;
-    void *val;
     int i;
     Hash_Node *node;
     char *ret, key[hash_table->hash_size];
@@ -392,6 +425,39 @@ json_encode(Hash_Table *hash_table)
     cJSON_Delete(jsonRoot);
 
     return ret;
+}
+
+char *
+json_encode4Node(Hash_Node *hash_node)
+{
+	cJSON *jsonRoot = NULL;
+	int i;
+	char *ret;
+
+	jsonRoot = cJSON_CreateObject();
+
+	if(NULL == jsonRoot){
+		printf("create json failed\n");
+		return NULL;
+	}
+
+	while(hash_node){
+		cJSON_AddStringToObject(jsonRoot, hash_node->kv->key, (char *)hash_node->kv->data);
+
+		hash_node = hash_node->next;
+	}
+
+	ret = cJSON_Print(jsonRoot);
+
+	if(NULL == ret){
+		printf("json ret failed\n");
+		cJSON_Delete(jsonRoot);
+		return NULL;
+	}
+
+	cJSON_Delete(jsonRoot);
+
+	return ret;
 }
 
 void
@@ -531,10 +597,11 @@ main(int argc, char **argv)
 void
 command_set_cache(C *client)
 {
-	int ret,keysize;
+	int ret,keysize,overtime;
 	char *key,overdue[128],*res;
-    time_t overtime;
-    overtime = time(0);
+    time_t t;
+    t = time(NULL);
+    overtime = time(&t);
 
     keysize = client->carrs[1].len+1;
     key = (char *)nmalloc(keysize);
@@ -550,15 +617,15 @@ command_set_cache(C *client)
     char *data;
     if(client->rsize > 0){
     	data = (char *)nmalloc(client->rsize);
+    	client->data_size = client->rsize;
     	memcpy(data, client->rbuf, client->rsize);
     }
 
 	if(hash_insert(STORAGE_DATA.cacheData, key, data) == -1){
-		res = "hash insert failed\r\n";
+		res = "cache hash insert failed\r\n";
 	}
 
-	void *val;
-	hash_find(STORAGE_DATA.cacheData, key, &val);
+	Hash_Node *queue;
 
     overtime += atoi(overdue);
 
@@ -581,9 +648,9 @@ command_get_cache(C *client)
 	int keysize;
 	char *key;
 
-	 keysize = client->carrs[1].len+1;
-	 key = (char *)nmalloc(keysize);
-	 memcpy(key, client->carrs[1].val, client->carrs[1].len);
+	keysize = client->carrs[1].len+1;
+	key = (char *)nmalloc(keysize);
+	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
 	ret = hash_find(STORAGE_DATA.cacheData, key, &res);
 	if(ret == -1){
@@ -591,6 +658,7 @@ command_get_cache(C *client)
 	}
 
 	free(client->response);
+	client->data_size = strlen(res);
 	client->rsize = strlen(res);
 	client->response = strdup(res);
 }
@@ -598,32 +666,125 @@ command_get_cache(C *client)
 void
 command_del_cache(C *client)
 {
+	int ret;
+	void *res;
+	int keysize;
+	char *key;
 
+	keysize = client->carrs[1].len+1;
+	key = (char *)nmalloc(keysize);
+	memcpy(key, client->carrs[1].val, client->carrs[1].len);
+
+	res = "DELETE SUCCESS\r\n";
+
+	if(hash_delete(STORAGE_DATA.cacheData, key) < 0){
+		res = "DELETE FAILED\r\n";
+	}
+
+	free(client->response);
+	client->data_size = strlen(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
 }
 
 void
 command_enqueue(C *client)
 {
+	int ret, keysize, queuekey;
+	unsigned long int index, h;
+	char *key, *res;
+	Hash_Node *find_queue;
+	time_t t;
+	t = time(NULL);
+	queuekey = time(&t);
 
+	keysize = client->carrs[1].len+1;
+	key = (char *)nmalloc(keysize);
+	memcpy(key, client->carrs[1].val, client->carrs[1].len);
+
+	if(client->re_read){
+		if(read_client(client) == -1) return;
+		client->re_read = 0;
+	}
+
+	char *data;
+	if(client->rsize > 0){
+		data = (char *)nmalloc(client->rsize);
+		client->data_size = client->rsize;
+		memcpy(data, client->rbuf, client->rsize);
+	}
+
+	if(hash_insert(STORAGE_DATA.queueData, key, data) == -1){
+		res = "queue hash insert failed\r\n";
+	}
+
+	h = get_hash(key, strlen(key));
+	index = h % STORAGE_DATA.queueData->hash_size;
+	find_queue = STORAGE_DATA.queueData->hashs[index];
+
+	if(add_skiplist_node(queue, queuekey, find_queue) != 0){
+		res = "enqueue queue failed\r\n";
+	}
+
+    if(hash_insert(queue_time_key, key, &queuekey) == -1){
+    	res = "queue time key hash insert failed\r\n";
+    }
+
+	res = "ENQUEUE OK\r\n";
+	free(client->response);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
+
+	nfree(key);
+	nfree(data);
 }
 
 void
 command_dequeue(C *client)
 {
+	int ret;
+	void *res,*qkey;
+	int keysize,queuekey;
+	char *key;
+	Hash_Node *dequeue;
 
+	keysize = client->carrs[1].len+1;
+	key = (char *)nmalloc(keysize);
+	memcpy(key, client->carrs[1].val, client->carrs[1].len);
+
+	ret = hash_find(queue_time_key, key, &qkey);
+	if(ret == -1){
+		res = "QUEUE NOT FOUND\r\n";
+	} else {
+		queuekey = *((int *)qkey);
+
+		if(find_skiplist_by_key(queue, queuekey, &dequeue) == -1){
+			res = "QUEUE NOT FOUND\r\n";
+		}
+		res = json_encode4Node(dequeue);
+		hash_delete(STORAGE_DATA.queueData, key);
+		hash_delete(queue_time_key, key);
+		del_skiplist_node(queue, queuekey);
+	}
+
+	free(client->response);
+	client->data_size = strlen(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
 }
 
 void
 command_monitor_cache(C *client)
 {
     char *res;
-    res = json_encode(STORAGE_DATA.cacheData);
+    res = json_encode4Hash(STORAGE_DATA.cacheData);
 
     if(NULL == res){
     	res = "cache json failed\n";
     }
 
     free(client->response);
+    client->data_size = strlen(res);
     client->rsize = strlen(res);
     client->response = strdup(res);
 }
@@ -632,13 +793,14 @@ void
 command_monitor_queue(C *client)
 {
 	char *res;
-	res = json_encode(STORAGE_DATA.queueData);
+	res = json_encode4Hash(STORAGE_DATA.queueData);
 
 	if(NULL == res){
-		res = "cache json failed\n";
+		res = "queue json failed\n";
 	}
 
 	free(client->response);
+	client->data_size = strlen(res);
 	client->rsize = strlen(res);
 	client->response = strdup(res);
 }

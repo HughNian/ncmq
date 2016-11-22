@@ -20,15 +20,20 @@ class NcmqModel
      */
     public function set($name, $delay, $data)
     {
-    	fwrite($this->conn, "set $name $delay\r\n$data\r\n");
+    	fwrite($this->conn, "set $name $delay\r\n");
+    	usleep(500);
+    	fwrite($this->conn, "$data\r\n");
     
-    	$response = fgets($this->conn);
-    	
-    	//echo $response;
-    	
-    	if(strstr($response, 'OK')) {
-    		$this->emsg = '添加缓存成功';
-    		return true;
+    	$count = fgets($this->conn);
+    	if($count > 0){
+    		$response = fgets($this->conn);
+    		if(strstr($response, 'OK')) {
+    			$this->emsg = '添加缓存成功';
+    			return true;
+    		} else {
+    			$this->emsg = '添加缓存失败';
+    			return false;
+    		}	
     	} else {
     		$this->emsg = '添加缓存失败';
     		return false;
@@ -41,19 +46,25 @@ class NcmqModel
      */
     public function enqueue($name, $job)
     {
-        fwrite($this->conn, "enqueue $name\r\n$job\r\n");
-
-        $response = fgets($this->conn);
+        fwrite($this->conn, "enqueue $name\r\n");
+        usleep(500);
+        fwrite($this->conn, "$job\r\n");
         
-        //echo $response;
+        $count = fgets($this->conn);
         
-    	if(strstr($response, 'OK')) {
-    		$this->emsg = '添加队列成功';
-    		return true;
-    	} else {
-    		$this->emsg = '添加队列失败';
-    		return false;
-    	}
+        if($count > 0){
+        	$response = fgets($this->conn);
+        	if(strstr($response, 'OK')) {
+        		$this->emsg = '添加队列成功';
+        		return true;
+        	} else {
+        		$this->emsg = '添加队列失败';
+        		return false;
+        	}	
+        } else {
+        	$this->emsg = '添加队列失败';
+        	return false;
+        }	
     }
     
     /**
@@ -94,12 +105,11 @@ class NcmqModel
     {
     	fwrite($this->conn, "mcache\r\n");
     	
-    	$size = 1024;
-    	$response = $paragraph = fread($this->conn, $size);
-    	while($paragraph){
-    		$paragraph = fread($this->conn, $size);
-    		$response .= $paragraph;
-    	}
+    	$response = '';
+    	$size = 0;
+    	$size = (int)fgets($this->conn);
+    	if($size > 0)
+    		$response = fread($this->conn, $size);
     	
     	return $response;
     }
@@ -114,47 +124,13 @@ class NcmqModel
     {
     	fwrite($this->conn, "mqueue\r\n");
     	 
-    	$response = fread($this->conn);
-    	 
+    	$response = '';
+    	$size = 0;
+    	$size = (int)fgets($this->conn);
+    	if($size > 0)
+    		$response = fread($this->conn, $size);
+    	
     	return $response;
-    }
-    
-    public function touch($name)
-    {
-        fwrite($this->conn, "touch $name\r\n");
-        
-        $response = fgets($this->conn);
-        if (substr($response, 0, 1) == '+') {
-            $response = explode(' ', $response);
-            $recycle_id = $response[1];
-            $size = $response[2] + 2;
-        } else {
-            $this->emsg = substr($response, 5);
-            return false;
-        }
-        
-        $job = '';
-        while (strlen($job) < $size) {
-            $job .= fread($this->conn, $size);
-        }
-        return array('id' => $recycle_id, 'job' => $job);
-    }
-    
-    public function size($name)
-    {
-        fwrite($this->conn, "size $name\r\n");
-        
-        $response = fgets($this->conn);
-        
-        echo $response;
-        
-        if (substr($response, 0, 1) == '+') {
-            $response = explode(' ', $response);
-            return $response[1];
-        } else {
-            $this->emsg = substr($response, 5);
-            return false;
-        }
     }
 
     public function error_message()

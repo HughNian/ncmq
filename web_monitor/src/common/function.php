@@ -68,7 +68,7 @@ function E($msg, $tag, $code)
  * @param string $msg 重定向前的提示信息
  * @return void
  */
-function redirect($url, $time=0, $msg='') {
+function redirect($url, $time=0, $msg='', $tag = 1) {
     //多行URL地址支持
     $url = str_replace(array("\n", "\r"), '', $url);
     if (empty($msg))
@@ -79,11 +79,20 @@ function redirect($url, $time=0, $msg='') {
             header('Location: ' . $url);
         } else {
             header("refresh:{$time};url={$url}");
-            echo($msg);
+            if($tag == 1){
+            	$icon = "😎 (*^‧^*)";
+            } else {
+            	$icon = '😒  @_@|||||';
+            }
+            
+            $head = '<style type="text/css">body{ margin: 40px; background: #fff; font-family: "微软雅黑"; color: #333; font-size: 35px; }</style>';
+            $html = "<center>{$icon} {$msg}</center>";
+            echo($head . $html);
         }
         exit();
     } else {
         $str = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
+        $str = "";
         if ($time != 0)
             $str .= $msg;
         exit($str);

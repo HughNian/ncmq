@@ -191,6 +191,8 @@ hash_delete(Hash_Table *hash_table, char *key)
     	node = node->next;
     }
 
+    if(!node) return -1;
+
     if(!prev){
     	hash_table->hashs[index] = node->next;
     } else {
@@ -203,7 +205,8 @@ hash_delete(Hash_Table *hash_table, char *key)
 
     hash_table->hash_nums--;
 
-    return 0;
+    if(hash_delete(hash_table, key) == -1) //递归彻底删除所有该key值的节点
+    	return 0;
 }
 
 int
@@ -277,7 +280,7 @@ do {                                                                            
   c -= a; c -= b; c ^= ( b >> 15 );                                              \
 } while (0)
 
-static inline uint64_t
+inline uint64_t
 get_hash(char *key, uint32_t keylen)
 {
     uint64_t hashv;

@@ -62,6 +62,8 @@ struct _client {
 
 	int re_read;
 
+	int data_size;
+
 	char *response;
 
 	time_t cost_time;

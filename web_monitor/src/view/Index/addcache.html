@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+<!--{include file="../Common/head.html"}-->
+<style>
+.show{display:block;}
+.hide{display:none;}
+</style>
+</head>
+<body class="J_scroll_fixed">
+<div class="wrap jj">
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="#">添加缓存</a></li>
+		</ul>
+	</div>
+	<form class="J_ajaxForm" data-role="list" action="/Index/addcache" method="post" >
+	<div class="h_a">添加缓存</div>
+	<div class="table_full">
+		<table width="100%">
+			<col class="th"/>
+			<col />
+			<thead>
+			<tr>
+				<th>缓存名</th>
+				<td><span class="must_red">*</span><input name="name" type="text" class="input length_3"></td>
+			</tr>
+			<tr>
+				<th>缓存内容</th>
+				<td><span class="must_red">*</span><textarea class="length_5" name="cache" style="height:150px"></textarea></td>
+			</tr>
+			<tr>
+				<th>超时时间</th>
+				<td><input name="overtime" type="text" class="input length_1" value="0"></td>
+			</tr>
+            </thead>
+		</table>
+	</div>
+	<div class="btn_wrap_pd">
+		<button type="submit" class="btn btn_submit">提交</button>
+	</div>
+</form>
+</div>
+<!--{include file="../Common/footer.html"}-->
+</body>
+</html>

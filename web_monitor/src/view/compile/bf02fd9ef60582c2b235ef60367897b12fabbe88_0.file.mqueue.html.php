@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-22 11:24:32
-  from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
+/* Smarty version 3.1.30, created on 2016-11-22 14:09:06
+  from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mqueue.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5833ba70b568f4_48982132',
+  'unifunc' => 'content_5833e10261ef46_48796075',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '02c17eec093ac0541077568a65ffbf86367d0ac2' => 
+    'bf02fd9ef60582c2b235ef60367897b12fabbe88' => 
     array (
-      0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html',
-      1 => 1479785070,
+      0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mqueue.html',
+      1 => 1479794730,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../Common/footer.html' => 1,
   ),
 ),false)) {
-function content_5833ba70b568f4_48982132 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5833e10261ef46_48796075 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -35,23 +35,23 @@ function content_5833ba70b568f4_48982132 (Smarty_Internal_Template $_smarty_tpl)
 <div class="wrap J_check_wrap">
 	<div class="nav">
 		<ul class="cc">
-			<li class="current"><a href="#">缓存监控</a></li>
+			<li class="current"><a href="#">队列监控</a></li>
 		</ul>
 	</div>
 	<div class="h_a">提示信息</div>
 	<div class="mb10 prompt_text">
 		<ol>
-			<li>缓存数据的查看,以缓存key值为分类。</li>
-			<li>每个key值分类下为相应的key值数据的队列，一般缓存取key值为队列第一个元素数据</li>
+			<li>队列数据的查看,以队列key值为分类。</li>
+			<li>key值下为相应队列</li>
 		</ol>
 	</div>
-	<?php if ($_smarty_tpl->tpl_vars['cacheData']->value) {?>
+	<?php if ($_smarty_tpl->tpl_vars['queueData']->value) {?>
 	<div class="table_list">
 		<table width="100%">
 			<thead>
 				<tr>
 					<td width="18%">key值</td>
-					<td>缓存数据表</td>
+					<td>队列数据表</td>
 				</tr>
 			</thead>
 			<tbody id="J_tag_list">
@@ -63,7 +63,7 @@ function content_5833ba70b568f4_48982132 (Smarty_Internal_Template $_smarty_tpl)
 							<tr>
 								<td width="8%">id</td>
 								<td width="15%">缓存key</td>
-								<td>缓存数据</td>
+								<td>队列数据</td>
 							</tr>
 						</thead>
 						<tbody id="J_tag_list">
@@ -128,7 +128,7 @@ var setting = {
 	}
 };
 
-var zNodes = <?php echo $_smarty_tpl->tpl_vars['cacheData']->value;?>
+var zNodes = <?php echo $_smarty_tpl->tpl_vars['queueData']->value;?>
 ;
 
 $(document).ready(function(){

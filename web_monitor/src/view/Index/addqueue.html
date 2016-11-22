@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+<!--{include file="../Common/head.html"}-->
+<style>
+.show{display:block;}
+.hide{display:none;}
+</style>
+</head>
+<body class="J_scroll_fixed">
+<div class="wrap jj">
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="#">添加队列</a></li>
+		</ul>
+	</div>
+	<form class="J_ajaxForm" data-role="list" action="/Index/addqueue" method="post" >
+	<div class="h_a">添加队列</div>
+	<div class="table_full">
+		<table width="100%">
+			<col class="th"/>
+			<col />
+			<thead>
+			<tr>
+				<th>队列名</th>
+				<td><span class="must_red">*</span><input name="name" type="text" class="input length_3"></td>
+			</tr>
+			<tr>
+				<th>队列内容</th>
+				<td><span class="must_red">*</span><textarea class="length_5" name="queue" style="height:150px"></textarea></td>
+			</tr>
+            </thead>
+		</table>
+	</div>
+	<div class="btn_wrap_pd">
+		<button type="submit" class="btn btn_submit">提交</button>
+	</div>
+</form>
+</div>
+<!--{include file="../Common/footer.html"}-->
+</body>
+</html>

@@ -7,23 +7,23 @@
 <div class="wrap J_check_wrap">
 	<div class="nav">
 		<ul class="cc">
-			<li class="current"><a href="#">缓存监控</a></li>
+			<li class="current"><a href="#">队列监控</a></li>
 		</ul>
 	</div>
 	<div class="h_a">提示信息</div>
 	<div class="mb10 prompt_text">
 		<ol>
-			<li>缓存数据的查看,以缓存key值为分类。</li>
-			<li>每个key值分类下为相应的key值数据的队列，一般缓存取key值为队列第一个元素数据</li>
+			<li>队列数据的查看,以队列key值为分类。</li>
+			<li>key值下为相应队列</li>
 		</ol>
 	</div>
-	<!--{if $cacheData }-->
+	<!--{if $queueData }-->
 	<div class="table_list">
 		<table width="100%">
 			<thead>
 				<tr>
 					<td width="18%">key值</td>
-					<td>缓存数据表</td>
+					<td>队列数据表</td>
 				</tr>
 			</thead>
 			<tbody id="J_tag_list">
@@ -35,7 +35,7 @@
 							<tr>
 								<td width="8%">id</td>
 								<td width="15%">缓存key</td>
-								<td>缓存数据</td>
+								<td>队列数据</td>
 							</tr>
 						</thead>
 						<tbody id="J_tag_list">
@@ -97,7 +97,7 @@ var setting = {
 	}
 };
 
-var zNodes = <!--{$cacheData}-->;
+var zNodes = <!--{$queueData}-->;
 
 $(document).ready(function(){
 	var t = $("#tree");

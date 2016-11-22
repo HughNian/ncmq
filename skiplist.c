@@ -163,3 +163,89 @@ get_top_val(sl *skiplist)
 
 	return skiplist->root->forward[0]->val;
 }
+
+void
+del_top_val(sl *skiplist)
+{
+	sl_node *node;
+	int i, newLevel;
+
+	if (skiplist->root->forward[0] == skiplist->root) return;
+
+	node = skiplist->root->forward[0];
+	for (i = 0; i <= skiplist->level; i++) {
+		if (skiplist->root->forward[i] == node) {
+			skiplist->root->forward[i] = node->forward[i];
+		} else {
+			break;
+		}
+	}
+
+	while ((skiplist->level > 0) &&
+		(skiplist->root->forward[skiplist->level] == skiplist->root))
+	{
+		skiplist->level--;
+	}
+
+	skiplist->size--;
+	nfree(node);
+}
+
+int
+find_skiplist_by_key(sl *skiplist, int key, void **rec)
+{
+    int i;
+    sl_node *x = skiplist->root;
+
+    for(i = skiplist->level; i >= 0; i--) {
+        while (x->forward[i] != skiplist->root
+          && skiplist->comp(x->forward[i]->key, key))
+            x = x->forward[i];
+    }
+
+    x = x->forward[0];
+    if (x != skiplist->root && (x->key == key)) {
+        *rec = x->val;
+        return 0;
+    }
+
+    return -1;
+}
+
+int
+delete_by_key(sl *list, int key, void **rec)
+{
+    int i;
+    sl_node *update[MAX_LEVEL+1], *x;
+
+    x = list->root;
+    for (i = list->level; i >= 0; i--) {
+        while (x->forward[i] != list->root
+                && list->comp(x->forward[i]->key, key))
+            x = x->forward[i];
+        update[i] = x;
+    }
+
+    x = x->forward[0];
+    if (x == list->root || !(x->key == key))
+        return -1;
+
+    for (i = 0; i <= list->level; i++) {
+        if (update[i]->forward[i] != x) break;
+        update[i]->forward[i] = x->forward[i];
+    }
+
+    if(rec) *rec = x->val;
+
+    nfree(x);
+
+    while ((list->level > 0) &&
+           (list->root->forward[list->level] == list->root))
+    {
+        list->level--;
+    }
+
+    list->size--;
+
+    return 1;
+}

@@ -121,7 +121,7 @@ class BaseController
 	 * 获取POST入参
 	 * 
 	 */
-	protected function postp($name, $defult = '')
+	protected function postp($name, $default = '')
 	{
 		if($_POST[$name]){
 			return $_POST[$name];

@@ -42,6 +42,6 @@ int hash_delete(Hash_Table *hash_table, char *key);
 int hash_update(Hash_Table *hash_table, char *key, void *new);
 void hash_foreach(Hash_Table *hash_table, print_hash handler);
 void hash_destory(Hash_Table *hash_table);
-static inline uint64_t get_hash(char *key, uint32_t keylen);
+inline uint64_t get_hash(char *key, uint32_t keylen);
 
 #endif
