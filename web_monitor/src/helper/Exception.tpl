@@ -26,7 +26,7 @@ h1{color: #444;background-color: transparent;border-bottom: 1px solid #D0D0D0;fo
 <body>
 <div class="error">
 <p class="face">Exception page!</p>
-<h1><?php echo strip_tags($e['message']);?></h1>
+<h4><?php echo strip_tags($e['message']);?></h4>
 <div class="content">
 <?php if(isset($e['file'])) {?>
 	<div class="info">

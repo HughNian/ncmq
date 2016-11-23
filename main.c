@@ -221,6 +221,7 @@ int
 read_client(C *client)
 {
 	char buf[DEFAULT_DATA_SIZE];
+	memset(buf, 0, DEFAULT_DATA_SIZE);
 	memset(client->rbuf, 0, client->rsize);
 	client->rsize = 0;
     while(1){
@@ -241,7 +242,7 @@ read_client(C *client)
     		default:
     			if(client->rsize >= client->rlimit){
     				client->rlimit *= 2;
-    				client->rbuf = (char *)realloc(client->rbuf, client->rlimit);
+    				client->rbuf = (char *)nrealloc(client->rbuf, client->rlimit);
     			}
     			memcpy(client->rbuf+client->rsize, buf, client->rnum);
     			client->rsize += client->rnum;
