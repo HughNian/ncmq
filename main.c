@@ -281,11 +281,13 @@ write_client(C *client)
 	while(1){
 		whsize = write(client->cfd, header, strlen(header));
 		if (whsize == -1) {
-			if (errno != EAGAIN && errno != EWOULDBLOCK) {
+			if(errno == EAGAIN || errno == EWOULDBLOCK){
+				continue;
+			} else {
+				fprintf(stderr, "client write error msg1 (%s)\n", strerror(errno));
 				goto failed;
-				break;
+				return -1;
 			}
-			return -1;
 		} else if (whsize == 0) {
 			goto failed;
 			break;
@@ -305,8 +307,7 @@ write_client(C *client)
 			switch(client->wnum){
 				case -1:
 					if(errno == EAGAIN || errno == EWOULDBLOCK){
-						client->writeOk = 1;
-						break;
+						continue;
 					}
 					fprintf(stderr, "client write error msg (%s)\n", strerror(errno));
 					goto failed;

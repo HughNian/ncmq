@@ -160,6 +160,7 @@ class IndexController extends BaseController
     	
     	$this->_tpl->assign('title', $this->_title);
     	$this->_tpl->assign('cacheData', $return);
+    	$this->_tpl->clearCache('mcache.html');
     	$this->_tpl->display('mcache.html');
     }
     
@@ -175,7 +176,7 @@ class IndexController extends BaseController
     	$ncmqModel = M('Ncmq');
     	 
     	$queueJson = $ncmqModel->mqueue();
-    	
+    	echo $queueJson;die;
     	$return = array();
     	 
     	if($queueJson){
@@ -211,6 +212,7 @@ class IndexController extends BaseController
     	 
     	$this->_tpl->assign('title', $this->_title);
     	$this->_tpl->assign('queueData', $return);
+    	$this->_tpl->clearCache('mqueue.html');
     	$this->_tpl->display('mqueue.html');
     }
     
