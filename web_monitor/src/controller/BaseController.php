@@ -19,8 +19,8 @@ class BaseController
 		//smarty配置
 		$this->_tpl = new Smarty;
 		$this->_tpl->debugging       = false;
-		$this->_tpl->caching         = false;
-		$this->_tpl->cache_lifetime  = 120;
+		$this->_tpl->caching         = true;
+		$this->_tpl->cache_lifetime  = 60;
 		$this->_tpl->left_delimiter  = "<!--{";
 		$this->_tpl->right_delimiter = "}-->";
 		$this->_tpl->compile_dir     = ROOT_PATH . TPL . 'compile/'; //设置编译目录

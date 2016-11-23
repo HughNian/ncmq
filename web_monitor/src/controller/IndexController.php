@@ -291,9 +291,9 @@ class IndexController extends BaseController
    		$ret = $ncmqModel->enqueue($name, $queue);
    			 
    		if($ret){
-   			redirect('/Index/managercache', 3, "添加成功");
+   			redirect('/Index/managerqueue', 3, "添加成功");
    		} else {
-   			redirect('/Index/managercache', 3, "添加失败", 2);
+   			redirect('/Index/managerqueue', 3, "添加失败", 2);
    		}
    	}
    	
