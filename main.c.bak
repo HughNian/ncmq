@@ -19,7 +19,9 @@ void command_dequeue(C *client);
 void command_monitor_cache(C *client);
 void command_monitor_queue(C *client);
 void command_get_c_keys(C *client);
+void command_get_q_keys(C *client);
 void command_get_c_nodes(C *client);
+void command_get_q_nodes(C *client);
 
 command_opts copts[] = {
     {"set", command_set_cache, 1},
@@ -27,10 +29,13 @@ command_opts copts[] = {
 	{"del", command_del_cache, 0},
 	{"enqueue", command_enqueue, 1},
 	{"dequeue", command_dequeue, 0},
+	//以下为外部调用API
 	{"mcache", command_monitor_cache, 0},
 	{"mqueue", command_monitor_queue, 0},
 	{"get_c_keys", command_get_c_keys, 0},
-	{"get_c_nodes", command_get_c_nodes, 0}
+	{"get_q_keys", command_get_q_keys, 0},
+	{"get_c_nodes", command_get_c_nodes, 0},
+	{"get_q_nodes", command_get_q_nodes, 0}
 };
 
 int
@@ -305,7 +310,7 @@ write_client(C *client)
 
 	if(read_body){
 		while(!client->writeOk){
-			wsize = client->return_size - client->wsize;
+			wsize = client->rsize - client->wsize;
 			if(wsize == 0) break;
 			client->wnum = write(client->cfd, client->wbuf, wsize);
 			switch(client->wnum){
@@ -632,8 +637,6 @@ command_set_cache(C *client)
 		goto RESULT;
 	}
 
-	Hash_Node *queue;
-
     overtime += atoi(overdue);
 
     add_mheap(overtime, key, 1);
@@ -642,8 +645,8 @@ command_set_cache(C *client)
 
 RESULT:
     free(client->response);
-    client->return_size = strlen(res);
-    client->response    = strdup(res);
+    client->rsize = strlen(res);
+    client->response = strdup(res);
 
     nfree(key);
     nfree(data);
@@ -667,9 +670,9 @@ command_get_cache(C *client)
 	}
 
 	free(client->response);
-	client->data_size   = strlen(res);
-	client->return_size = strlen(res);
-	client->response    = strdup(res);
+	client->data_size = strlen(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
 }
 
 void
@@ -688,12 +691,14 @@ command_del_cache(C *client)
 
 	if(hash_delete(STORAGE_DATA.cacheData, key) < 0){
 		res = "DELETE FAILED\r\n";
+		goto RESULT;
 	}
 
+RESULT:
 	free(client->response);
-	client->data_size   = strlen(res);
-	client->return_size = strlen(res);
-	client->response    = strdup(res);
+	client->data_size = strlen(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
 }
 
 void
@@ -746,8 +751,8 @@ command_enqueue(C *client)
 
 RESULT:
 	free(client->response);
-	client->return_size = strlen(res);
-	client->response    = strdup(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
 
 	nfree(key);
 	nfree(data);
@@ -785,9 +790,11 @@ command_dequeue(C *client)
 
 RESULT:
 	free(client->response);
-	client->data_size   = strlen(res);
-	client->return_size = strlen(res);
-	client->response    = strdup(res);
+	client->data_size = strlen(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
+
+	nfree(key);
 }
 
 void
@@ -797,13 +804,15 @@ command_monitor_cache(C *client)
     res = json_encode4Hash(STORAGE_DATA.cacheData);
 
     if(NULL == res){
-    	res = "cache json failed\n";
+    	res = "cache json failed\r\n";
+    	goto RESULT;
     }
 
+RESULT:
     free(client->response);
-    client->data_size   = strlen(res);
-    client->return_size = strlen(res);
-    client->response    = strdup(res);
+    client->data_size = strlen(res);
+    client->rsize = strlen(res);
+    client->response = strdup(res);
 }
 
 void
@@ -813,13 +822,13 @@ command_monitor_queue(C *client)
 	res = json_encode4Hash(STORAGE_DATA.queueData);
 
 	if(NULL == res){
-		res = "queue json failed\n";
+		res = "queue json failed\r\n";
 	}
 
 	free(client->response);
-	client->data_size   = strlen(res);
-	client->return_size = strlen(res);
-	client->response    = strdup(res);
+	client->data_size = strlen(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
 }
 
 void
@@ -866,9 +875,15 @@ command_get_c_keys(C *client)
 
 RESULT:
 	free(client->response);
-	client->data_size   = strlen(res);
-	client->return_size = strlen(res);
-	client->response    = strdup(res);
+	client->data_size = strlen(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
+}
+
+void
+command_get_q_keys(C *client)
+{
+
 }
 
 void
@@ -919,9 +934,15 @@ command_get_c_nodes(C *client)
 
 RESULT:
 	free(client->response);
-	client->data_size   = strlen(res);
-	client->return_size = strlen(res);
-	client->response    = strdup(res);
+	client->data_size = strlen(res);
+	client->rsize = strlen(res);
+	client->response = strdup(res);
 
 	nfree(key);
+}
+
+void
+command_get_q_nodes(C *client)
+{
+
 }

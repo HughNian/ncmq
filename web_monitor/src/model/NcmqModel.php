@@ -4,13 +4,14 @@ defined('APP_PATH') or die('No direct access allowed.');
 class NcmqModel
 {
     private $conn;
+    private $errno;
     private $emsg;
     
     public function __construct($host = '127.0.0.1', $port = '21666')
     {
-        $this->conn = fsockopen($host, $port, $enum, $emsg);
+        $this->conn = fsockopen($host, $port, $this->errno, $this->emsg);
         if (!$this->conn) {
-            exit($emsg);
+            exit($this->emsg);
         }
     }
     
@@ -73,9 +74,14 @@ class NcmqModel
      */
     public function get($name)
     {
-    	fwrite($this->conn, "dequeue $name\r\n");
+    	fwrite($this->conn, "get $name\r\n");
     
-    	$response = fread($this->conn);
+    	$response = '';
+    	$size = 0;
+    	$size = (int)fgets($this->conn);
+    	if($size > 0){
+    		$response = fread($this->conn, $size);
+    	}
     	
     	return $response;
     
@@ -89,7 +95,11 @@ class NcmqModel
     {
         fwrite($this->conn, "dequeue $name\r\n");
         
-        $response = fread($this->conn);
+        $response = '';
+        $size = 0;
+        $size = (int)fgets($this->conn);
+        if($size > 0)
+        	$response = fread($this->conn, $size);
         
         return $response;
         
@@ -103,15 +113,64 @@ class NcmqModel
      */
     public function mcache()
     {
+    	stream_set_timeout($this->conn, 3);
+    	
     	fwrite($this->conn, "mcache\r\n");
     	
     	$response = '';
     	$size = 0;
     	$size = (int)fgets($this->conn);
+    	
     	if($size > 0)
     		$response = fread($this->conn, $size);
     	
     	return $response;
+    }
+    
+    /**
+     * 获取所有缓存
+     *
+     * @return json
+     *
+     */
+    public function mcache2()
+    {
+    	stream_set_timeout($this->conn, 3);
+    	
+    	$ksize = $nsize = 0;
+    	$keys = $nodes = '';
+    	$response = array();
+    	
+    	fwrite($this->conn, "get_c_keys\r\n");
+    	$ksize = (int)fgets($this->conn);
+    	
+    	if($ksize > 0){
+    		$keys = fread($this->conn, $ksize);
+    		if($keys){
+    			$keys = json_decode($keys, 1);
+    			if(is_array($keys)){
+    				foreach($keys as $k => $v){
+    					fwrite($this->conn, "get_c_nodes $v\r\n");
+    					$nsize = (int)fgets($this->conn);
+    					if($nsize > 0){
+    						$nodes = fread($this->conn, $nsize);
+    						if($nodes){
+    							$nodes = json_decode($nodes, 1);
+    							
+    							if(is_array($nodes)){
+    								foreach($nodes as $kk => $vv){
+    									$rkey = "$k$kk";
+    									$response[$rkey] = array($v => $vv);
+    								}	
+    							}
+    						}
+    					}
+    				}
+    			}
+    		}
+    	}
+    	
+    	return json_encode($response);
     }
     
     /**
@@ -140,6 +199,6 @@ class NcmqModel
     
     public function __destruct()
     {
-    	fclose($this->conn);
+     	fclose($this->conn);
     }
 }

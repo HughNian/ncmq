@@ -102,7 +102,7 @@ class IndexController extends BaseController
     	$sysinfo = array(
     			'system_version'  => '0.0.1',
     			'php_version'     => PHP_VERSION,
-    			'server_software' =>  php_uname(),
+    			'server_software' => php_uname(),
     			'max_upload'      => ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'Disabled',
     			'max_excute_time' => intval(ini_get('max_execution_time')) . ' seconds',
     	);
@@ -121,9 +121,9 @@ class IndexController extends BaseController
     	if(!$this->checkLogin())
     		redirect('/Index/index');
     	
-    	$ncmqModel = M('Ncmq');
+    	$ncmqSocket = M('NcmqSocket');
     	
-    	$cacheJson = $ncmqModel->mcache();
+    	$cacheJson = $ncmqSocket->mcache();
     	
     	$return = array();
     	
@@ -173,10 +173,10 @@ class IndexController extends BaseController
     	if(!$this->checkLogin())
     		redirect('/Index/index');
     	
-    	$ncmqModel = M('Ncmq');
+    	$ncmqSocket = M('NcmqSocket');
     	 
-    	$queueJson = $ncmqModel->mqueue();
-    	echo $queueJson;die;
+    	$queueJson = $ncmqSocket->mqueue();
+    	
     	$return = array();
     	 
     	if($queueJson){
@@ -248,9 +248,9 @@ class IndexController extends BaseController
    		
    		if(!$overtime || !preg_match('/^0-9$/', $overtime)) $overtime = 0;
    		
-   		$ncmqModel = M('Ncmq');
+   		$ncmqSocket = M('NcmqSocket');
    		
-   		$ret = $ncmqModel->set($name, $overtime, $cache);
+   		$ret = $ncmqSocket->set($name, $overtime, $cache);
    		
    		if($ret){
    			redirect('/Index/managercache', 3, "添加成功");
@@ -288,9 +288,9 @@ class IndexController extends BaseController
    			redirect('/Index/managercache', 3, "提交参数不正确", 2);
    		}
    		
-   		$ncmqModel = M('Ncmq');
+   		$ncmqSocket = M('NcmqSocket');
    		
-   		$ret = $ncmqModel->enqueue($name, $queue);
+   		$ret = $ncmqSocket->enqueue($name, $queue);
    			 
    		if($ret){
    			redirect('/Index/managerqueue', 3, "添加成功");

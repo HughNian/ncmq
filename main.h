@@ -50,6 +50,7 @@ struct _client {
 	int readOk;
 	char *rbuf;
 	int rsize;
+	int return_size;
 	int rlimit;
 	int rnum;
 	int writeOk;
