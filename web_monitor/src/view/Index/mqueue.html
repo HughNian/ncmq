@@ -29,12 +29,14 @@
 			<tbody id="J_tag_list">
 			<tr>
 				<td id="tree" class="ztree" style="width:260px; overflow:auto;"></td>
-				<td id="cache">
+				<td id="queue">
 					<table width="100%">
 						<thead>
 							<tr>
-								<td width="8%">id</td>
-								<td width="15%">缓存key</td>
+								<td width="6%">id</td>
+								<td width="12%">缓存key</td>
+								<td width="15%">添加时间</td>
+								<td width="15%">更新时间</td>
 								<td>队列数据</td>
 							</tr>
 						</thead>
@@ -42,6 +44,8 @@
 						<tr>
 							<td id="id"></td>
 							<td id="key"></td>
+							<td id="add_time"></td>
+							<td id="up_time"></td>
 							<td id="content"></td>
 						</tr>
 						</tbody>
@@ -85,12 +89,16 @@ var setting = {
 			} else {
 				var id  = treeNode.id;
 				var pid = treeNode.pid;
-				var key = treeNode.key; 
-				var content = treeNode.cache;
+				var key = treeNode.key;
+				var add_time = treeNode.add_time;
+				var up_time = treeNode.up_time;
+				var content = treeNode.queue;
 				//var cache = $.fn.zTree.getZTreeObj("cache");
-				$("#cache").find('#id').html(id);
-				$("#cache").find('#key').html(key);
-				$("#cache").find('#content').html(content);
+				$("#queue").find('#id').html(id);
+				$("#queue").find('#key').html(key);
+				$("#queue").find('#add_time').html(add_time);
+				$("#queue").find('#up_time').html(up_time);
+				$("#queue").find('#content').html(content);
 				return true;
 			}
 		},

@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-23 11:07:21
+/* Smarty version 3.1.30, created on 2016-11-28 15:02:05
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mqueue.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_583507e93aef74_53592441',
+  'unifunc' => 'content_583bd66d196aa0_65919152',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'bf02fd9ef60582c2b235ef60367897b12fabbe88' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mqueue.html',
-      1 => 1479794730,
+      1 => 1480316521,
       2 => 'file',
     ),
   ),
@@ -22,8 +22,8 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../Common/footer.html' => 1,
   ),
 ),false)) {
-function content_583507e93aef74_53592441 (Smarty_Internal_Template $_smarty_tpl) {
-$_smarty_tpl->compiled->nocache_hash = '1593949303583507e93744e3_56617432';
+function content_583bd66d196aa0_65919152 (Smarty_Internal_Template $_smarty_tpl) {
+$_smarty_tpl->compiled->nocache_hash = '1052133610583bd66d1281e8_62312861';
 ?>
 <!doctype html>
 <html>
@@ -58,12 +58,14 @@ $_smarty_tpl->compiled->nocache_hash = '1593949303583507e93744e3_56617432';
 			<tbody id="J_tag_list">
 			<tr>
 				<td id="tree" class="ztree" style="width:260px; overflow:auto;"></td>
-				<td id="cache">
+				<td id="queue">
 					<table width="100%">
 						<thead>
 							<tr>
-								<td width="8%">id</td>
-								<td width="15%">缓存key</td>
+								<td width="6%">id</td>
+								<td width="12%">缓存key</td>
+								<td width="15%">添加时间</td>
+								<td width="15%">更新时间</td>
 								<td>队列数据</td>
 							</tr>
 						</thead>
@@ -71,6 +73,8 @@ $_smarty_tpl->compiled->nocache_hash = '1593949303583507e93744e3_56617432';
 						<tr>
 							<td id="id"></td>
 							<td id="key"></td>
+							<td id="add_time"></td>
+							<td id="up_time"></td>
 							<td id="content"></td>
 						</tr>
 						</tbody>
@@ -117,12 +121,16 @@ var setting = {
 			} else {
 				var id  = treeNode.id;
 				var pid = treeNode.pid;
-				var key = treeNode.key; 
-				var content = treeNode.cache;
+				var key = treeNode.key;
+				var add_time = treeNode.add_time;
+				var up_time = treeNode.up_time;
+				var content = treeNode.queue;
 				//var cache = $.fn.zTree.getZTreeObj("cache");
-				$("#cache").find('#id').html(id);
-				$("#cache").find('#key').html(key);
-				$("#cache").find('#content').html(content);
+				$("#queue").find('#id').html(id);
+				$("#queue").find('#key').html(key);
+				$("#queue").find('#add_time').html(add_time);
+				$("#queue").find('#up_time').html(up_time);
+				$("#queue").find('#content').html(content);
 				return true;
 			}
 		},
