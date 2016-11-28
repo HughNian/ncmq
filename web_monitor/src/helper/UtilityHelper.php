@@ -937,4 +937,30 @@ class UtilityHelper
     	}
     	return $arr;
     }
+    
+    /**
+     * 获取一周七天日期
+     * 
+     */
+    public static function getWeekDay()
+    {
+    	//当前日期
+    	$sdefaultDate = date("Y-m-d");
+    	//$first =1 表示每周星期一为开始日期 0表示每周日为开始日期
+    	$first = 1;
+    	//获取当前周的第几天 周日是 0 周一到周六是 1 - 6
+    	$w = date('w',strtotime($sdefaultDate));
+    	//获取本周开始日期，如果$w是0，则表示周日，减去 6 天
+    	$mon = date('Y-m-d',strtotime("$sdefaultDate -".($w ? $w - $first : 6).' days'));
+    	$tue = date('Y-m-d',strtotime("$mon +1 days"));
+    	$wed = date('Y-m-d',strtotime("$mon +2 days"));
+    	$thu = date('Y-m-d',strtotime("$mon +3 days"));
+    	$fri = date('Y-m-d',strtotime("$mon +4 days"));
+    	$sar = date('Y-m-d',strtotime("$mon +5 days"));
+    	$sun = date('Y-m-d',strtotime("$mon +6 days"));
+    	
+    	$week = array($mon, $tue, $wed, $thu, $fri, $sar, $sun);
+    	
+    	return $week;
+    }
 }

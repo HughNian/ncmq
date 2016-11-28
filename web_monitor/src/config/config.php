@@ -39,9 +39,10 @@ return $config = array
 		array('id' => 1, 'pid' => '0', 'url' => '', 'name' => '系统监控'),
 		array('id' => 2, 'pid' => '1', 'url' => '/Index/mcache', 'name' => '缓存监控'),
 		array('id' => 3, 'pid' => '1', 'url' => '/Index/mqueue', 'name' => '队列监控'),
-		array('id' => 4, 'pid' => '0', 'url' => '', 'name' => '系统管理'),
-		array('id' => 5, 'pid' => '4', 'url' => '/Index/managercache', 'name' => '缓存管理'),
-		array('id' => 6, 'pid' => '4', 'url' => '/Index/managerqueue', 'name' => '队列管理'),
+		array('id' => 4, 'pid' => '1', 'url' => '/Index/syschart', 'name' => '系统统计'),
+		array('id' => 5, 'pid' => '0', 'url' => '', 'name' => '系统管理'),
+		array('id' => 6, 'pid' => '5', 'url' => '/Index/managercache', 'name' => '缓存管理'),
+		array('id' => 7, 'pid' => '5', 'url' => '/Index/managerqueue', 'name' => '队列管理'),
 	),
 		
 	//默认的一些配置

@@ -88,6 +88,8 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
 {
 	int key_size;
 	unsigned long int index,h;
+	time_t add_time;
+	add_time = time(NULL);
 
 	if(hash_table->hash_nums >= hash_table->hash_size){
 		if(hash_resize(hash_table) == -1){
@@ -105,7 +107,9 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
     	return -1;
     }
     hash_node->index = index;
-    hash_node->h     = h;
+    hash_node->h  = h;
+    hash_node->add_time = time(&add_time);
+    hash_node->up_time = 0;
     hash_node->kv = (Key_Val *)nmalloc(sizeof(Key_Val)+KEY_SIZE);
     if(NULL == hash_node->kv){
     	nfree(hash_node);
@@ -213,6 +217,9 @@ int
 hash_update(Hash_Table *hash_table, char *key, void *new)
 {
     unsigned long int index,h;
+    time_t up_time;
+    up_time = time(NULL);
+
     h = get_hash(key, strlen(key));
     index = h % hash_table->hash_size;
 
@@ -223,6 +230,7 @@ hash_update(Hash_Table *hash_table, char *key, void *new)
     node = hash_table->hashs[index];
     while(node){
     	if(index == node->index && strncmp(node->kv->key, key, strlen(key)) == 0){
+    		node->up_time  = time(&up_time);
     		node->kv->data = new;
     	}
     	node = node->next;

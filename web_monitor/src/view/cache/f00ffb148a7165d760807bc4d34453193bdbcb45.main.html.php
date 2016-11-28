@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-25 14:42:13
+/* Smarty version 3.1.30, created on 2016-11-28 11:12:14
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/main.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5837dd453b7202_27602704',
+  'unifunc' => 'content_583ba08e3b3906_57957877',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -24,7 +24,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_5837dd453b7202_27602704 (Smarty_Internal_Template $_smarty_tpl) {
+function content_583ba08e3b3906_57957877 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -143,7 +143,7 @@ var USUALL = [], /*常用的功能模块*/
 	name : '最近操作',
 	disabled : true
 } ], TEMP),
-	SUBMENU_CONFIG = {"1":{"id":1,"pid":"0","url":"","name":"\u7cfb\u7edf\u76d1\u63a7","items":[{"id":2,"pid":"1","url":"\/Index\/mcache","name":"\u7f13\u5b58\u76d1\u63a7"},{"id":3,"pid":"1","url":"\/Index\/mqueue","name":"\u961f\u5217\u76d1\u63a7"}]},"4":{"id":4,"pid":"0","url":"","name":"\u7cfb\u7edf\u7ba1\u7406","items":[{"id":5,"pid":"4","url":"\/Index\/managercache","name":"\u7f13\u5b58\u7ba1\u7406"},{"id":6,"pid":"4","url":"\/Index\/managerqueue","name":"\u961f\u5217\u7ba1\u7406"}]}},/*主菜单区*/
+	SUBMENU_CONFIG = {"1":{"id":1,"pid":"0","url":"","name":"\u7cfb\u7edf\u76d1\u63a7","items":[{"id":2,"pid":"1","url":"\/Index\/mcache","name":"\u7f13\u5b58\u76d1\u63a7"},{"id":3,"pid":"1","url":"\/Index\/mqueue","name":"\u961f\u5217\u76d1\u63a7"},{"id":4,"pid":"1","url":"\/Index\/syschart","name":"\u7cfb\u7edf\u7edf\u8ba1"}]},"5":{"id":5,"pid":"0","url":"","name":"\u7cfb\u7edf\u7ba1\u7406","items":[{"id":6,"pid":"5","url":"\/Index\/managercache","name":"\u7f13\u5b58\u7ba1\u7406"},{"id":7,"pid":"5","url":"\/Index\/managerqueue","name":"\u961f\u5217\u7ba1\u7406"}]}},/*主菜单区*/
 	imgpath = '{@G:images|html}',
 	times = 0,
 	getdescurl = '{$getdesc|html}',

@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-25 15:33:16
+/* Smarty version 3.1.30, created on 2016-11-28 11:16:57
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mqueue.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5837e93c531436_35215719',
+  'unifunc' => 'content_583ba1a95ace84_41539632',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_5837e93c531436_35215719 (Smarty_Internal_Template $_smarty_tpl) {
+function content_583ba1a95ace84_41539632 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -148,7 +148,7 @@ var setting = {
 	}
 };
 
-var zNodes = [{"id":1,"pId":0,"name":"queue1","cache":""},{"id":"10","pId":1,"key":"queue1","name":"[id:0|key:queue1]","cache":"{\"success\":true,\"errorCode\":710000,\"msg\":\"OK\",\"data\":{\"result\":[{\"3307\":[{\"flightType\":\"2\",\"orgCityCode\":\"200\",\"orgCityName\":\"\\u5317\\u4eac\",\"dstCityCode\":\"414\",\"dstCityName\":\"\\u53a6\\u95e8\",\"select_time_type\":\"1\",\"beginDate\":\"2016-11-27\",\"flightSource\":\"2\",\"sortBy\":\"1\",\"key_id\":1,\"promotionBeginAt\":\"\",\"promotionEndAt\":\"\",\"tag1\":\"\\u9996\\u90fd\\u822a\\u7a7a \\u2014 \\u201c\\u9014\\u725b\\u53f7\\u201d\\u7279\\u60e0\",\"tag2\":\"\\u7acb\\u51cf\",\"image_url\":\"http:\\\/\\\/m.tuniucdn.com\\\/fb2\\\/t1\\\/G2\\\/M00\\\/1B\\\/AE\\\/Cii-TFg0N22IK9WpAD1JSR_7jt4AAEsSQJCuX4APUlh27.jpeg\",\"price\":\"685\",\"discount\":\"\",\"solutionId\":\"\",\"airCompanyCode\":\"\",\"jumpUrl\":\"http:\\\/\\\/www.tuniu.com\\\/flight\\\/city_200_414\\\/?start=2016-11-27&type=1&\",\"imageUrl\":\"http:\\\/\\\/m.tuniucdn.com\\\/fb2\\\/t1\\\/G2\\\/M00\\\/1B\\\/AE\\\/Cii-TFg0N22IK9WpAD1JSR_7jt4AAEsSQJCuX4APUlh27.jpeg\"}"}];
+var zNodes = [{"id":1,"pId":0,"name":"queue1","cache":""},{"id":"10","pId":1,"key":"queue1","name":"[id:0|key:queue1]","cache":"quququeueueueuqqq"}];
 
 $(document).ready(function(){
 	var t = $("#tree");

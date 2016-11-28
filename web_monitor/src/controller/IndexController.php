@@ -132,21 +132,23 @@ class IndexController extends BaseController
     		
     		$data = array();
     		$i = 1;
-    		foreach($cacheArr as $val){
+    		foreach($cacheArr as $k => $val){
     			$key = key($val);
     			$value = current($val);
-    			$data[$key][] = $value;
+    			$data[$key][] = array('data' => $value, 'add_time' => $val['add_time'], 'up_time' => $val['up_time']);
     		}
-    		 
+    		
     		$return = array();
     		foreach($data as $key => $val){
     			$id = $i;
     			array_push($return, array('id' => $id, 'pId' => 0, 'name' => $key, 'cache' => ''));
     			for($n = 0; $n < count($val); $n++){
-    				$cid = $n;
-    				$cache = $val[$cid];
+    				$cid = $n;    				
+    				$add_time = $val[$cid]['add_time'] ? date('Y-m-d H:i:s', $val[$cid]['add_time']) : '--';
+    				$up_time = $val[$cid]['up_time'] ? date('Y-m-d H:i:s', $val[$cid]['up_time']) : '--';
+    				$cache = $val[$cid]['data'];
     				if(is_array($cache)) $cache = json_encode($cache);
-    				array_push($return, array('id' => $id . $cid, 'pId' => $id, 'key' => $key, 'name' => "[id:$cid|key:$key]", 'cache' => $cache));
+    				array_push($return, array('id' => $id . $cid, 'pId' => $id, 'key' => $key, 'name' => "[id:$cid|key:$key]", 'cache' => $cache, 'add_time' => $add_time, 'up_time' => $up_time));
     			}
     			$i++;
     		}
@@ -297,6 +299,71 @@ class IndexController extends BaseController
    		} else {
    			redirect('/Index/managerqueue', 3, "添加失败", 2);
    		}
+   	}
+   	
+   	/**
+   	 * 系统统计
+   	 * 
+   	 */
+   	public function syschart()
+   	{
+   		if(!$this->checkLogin())
+   			redirect('/Index/index');
+   		
+   		$week = UtilityHelper::getWeekDay();
+   		$cacheArr = $queueArr = array();
+   		$cacheChart = $queueChart = array(0,0,0,0,0,0,0);
+   		
+   		$ncmqSocket = M('NcmqSocket');
+   		$cacheJson = $ncmqSocket->mcache();
+   		$cacheArr = json_decode($cacheJson, 1);
+   		
+   		if($cacheArr){
+   			$times = array();
+   			foreach($cacheArr as $arr){
+   				$times[]['time'] = date('Y-m-d', $arr['add_time']);
+   			}
+   			
+   			foreach($week as $key => $day){
+   				$i = 0;
+   				foreach($times as $val){
+   					if($day == $val['time']){
+   						$cacheChart[$key] = ++$i;
+   					} else {
+   						$cacheChart[$key] = 0;
+   					}
+   				}
+   			}
+   		}
+   		
+   		$ncmqSocket = M('NcmqSocket');
+   		$queueJson = $ncmqSocket->mqueue();
+   		$queueArr = json_decode($queueJson, 1);
+   		
+   		if($queueArr){
+   			$times = array();
+   			foreach($queueArr as $arr){
+   				$times[]['time'] = date('Y-m-d', $arr['add_time']);
+   			}
+   		
+   			foreach($week as $key => $day){
+   				$i = 0;
+   				foreach($times as $val){
+   					if($day == $val['time']){
+   						$queueChart[$key] = ++$i;
+   					} else {
+   						$queueChart[$key] = 0;
+   					}
+   				}
+   			}
+   		}
+   		
+   		$this->_tpl->assign('cache', json_encode($cacheChart));
+   		$this->_tpl->assign('queue', json_encode($queueChart));
+   		$this->_tpl->assign('week', json_encode($week));
+   		$this->_tpl->assign('title', $this->_title);
+   		$this->_tpl->clearCache('syschart.html');
+   		$this->_tpl->display('syschart.html');
    	}
    	
     /**

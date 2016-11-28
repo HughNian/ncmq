@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-23 11:07:19
+/* Smarty version 3.1.30, created on 2016-11-25 17:18:38
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_583507e7d61082_67405141',
+  'unifunc' => 'content_583801ee5825a9_66085363',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '02c17eec093ac0541077568a65ffbf86367d0ac2' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html',
-      1 => 1479785070,
+      1 => 1480065516,
       2 => 'file',
     ),
   ),
@@ -22,8 +22,8 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../Common/footer.html' => 1,
   ),
 ),false)) {
-function content_583507e7d61082_67405141 (Smarty_Internal_Template $_smarty_tpl) {
-$_smarty_tpl->compiled->nocache_hash = '431663168583507e7c48e63_45076691';
+function content_583801ee5825a9_66085363 (Smarty_Internal_Template $_smarty_tpl) {
+$_smarty_tpl->compiled->nocache_hash = '1606159123583801ee542230_21321565';
 ?>
 <!doctype html>
 <html>
@@ -62,8 +62,10 @@ $_smarty_tpl->compiled->nocache_hash = '431663168583507e7c48e63_45076691';
 					<table width="100%">
 						<thead>
 							<tr>
-								<td width="8%">id</td>
-								<td width="15%">缓存key</td>
+								<td width="6%">id</td>
+								<td width="12%">缓存key</td>
+								<td width="15%">添加时间</td>
+								<td width="15%">更新时间</td>
 								<td>缓存数据</td>
 							</tr>
 						</thead>
@@ -71,6 +73,8 @@ $_smarty_tpl->compiled->nocache_hash = '431663168583507e7c48e63_45076691';
 						<tr>
 							<td id="id"></td>
 							<td id="key"></td>
+							<td id="add_time"></td>
+							<td id="up_time"></td>
 							<td id="content"></td>
 						</tr>
 						</tbody>
@@ -117,11 +121,15 @@ var setting = {
 			} else {
 				var id  = treeNode.id;
 				var pid = treeNode.pid;
-				var key = treeNode.key; 
+				var key = treeNode.key;
+				var add_time = treeNode.add_time;
+				var up_time = treeNode.up_time;
 				var content = treeNode.cache;
 				//var cache = $.fn.zTree.getZTreeObj("cache");
 				$("#cache").find('#id').html(id);
 				$("#cache").find('#key').html(key);
+				$("#cache").find('#add_time').html(add_time);
+				$("#cache").find('#up_time').html(up_time);
 				$("#cache").find('#content').html(content);
 				return true;
 			}

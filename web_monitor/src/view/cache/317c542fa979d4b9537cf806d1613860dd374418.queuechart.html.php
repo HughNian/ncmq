@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-28 11:12:25
-  from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/default.html" */
+/* Smarty version 3.1.30, created on 2016-11-28 09:46:21
+  from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/queuechart.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_583ba09933e7f7_04100213',
+  'unifunc' => 'content_583b8c6d51dc29_21594514',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '7423841d783c3c6dbcb328a08d543da7d8730638' => 
+    '87726e8d154172323bb474fe0f7c55f3d6f23348' => 
     array (
-      0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/default.html',
-      1 => 1479558522,
+      0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/queuechart.html',
+      1 => 1480066240,
       2 => 'file',
     ),
     'f7ce84368a45b02340e74d6629d48f66e7e3e607' => 
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_583ba09933e7f7_04100213 (Smarty_Internal_Template $_smarty_tpl) {
+function content_583b8c6d51dc29_21594514 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -57,37 +57,47 @@ var GV = {
 <script src="/public/js/admin/wind.js?v20130702"></script>
 <script src="/public/js/admin/jquery.js?v20130702"></script>
 <script type="text/javascript" src="/public/js/jquery.ztree.core-3.5.min.js"></script>
+<style>
+.show{display:block;}
+.hide{display:none;}
+</style>
 </head>
-<body>
-	<div class="wrap">
-		<div id="home_toptip"></div>
-		<h2 class="h_a">系统信息</h2>
-		<div class="home_info">
-			<ul>
-				<li><em>软件版本</em> <span>0.0.1</li>
-				<li><em>PHP版本</em> <span>7.0.9</span></li>
-				<li><em>服务器端信息</em> <span>Linux niansong-VirtualBox 3.13.0-32-generic #57-Ubuntu SMP Tue Jul 15 03:51:12 UTC 2014 i686</span>
-				</li>
-				<li><em>最大上传限制</em> <span>2M</span></li>
-				<li><em>最大执行时间</em> <span>30 seconds</span>
-				</li>
-			</ul>
-		</div>
-		<h2 class="h_a">开发人员</h2>
-		<div class="home_info" id="home_devteam">
-			<ul>         
-				<li>
-				<em>版权所有</em>            
-				<span>年嵩</span>         
-				</li>
-				<li>
-				<em>产品研发</em>            
-				<span>年嵩</span>         
-				</li>
-			</ul>
-		</div>
+<body class="J_scroll_fixed">
+<div class="wrap jj">
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="#">添加缓存</a></li>
+		</ul>
 	</div>
+	<form class="J_ajaxForm" data-role="list" action="/Index/addcache" method="post" >
+	<div class="h_a">添加缓存</div>
+	<div class="table_full">
+		<table width="100%">
+			<col class="th"/>
+			<col />
+			<thead>
+			<tr>
+				<th>缓存名</th>
+				<td><span class="must_red">*</span><input name="name" type="text" class="input length_3"></td>
+			</tr>
+			<tr>
+				<th>缓存内容</th>
+				<td><span class="must_red">*</span><textarea class="length_5" name="cache" style="height:150px"></textarea></td>
+			</tr>
+			<tr>
+				<th>超时时间</th>
+				<td><input name="overtime" type="text" class="input length_1" value="0"></td>
+			</tr>
+            </thead>
+		</table>
+	</div>
+	<div class="btn_wrap_pd">
+		<button type="submit" class="btn btn_submit">提交</button>
+	</div>
+</form>
+</div>
 <script src="/public/js/admin/pages/common/common.js?v20130702"></script>
 </body>
-</html><?php }
+</html>
+<?php }
 }

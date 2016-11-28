@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <time.h>
 #include "nmalloc.h"
 
 typedef unsigned long int ub4;
@@ -21,6 +22,8 @@ typedef struct {
 typedef struct Hash_Node {
     unsigned long int index;
     unsigned long int h;
+    int add_time;
+    int up_time;
     Key_Val *kv;
     struct Hash_Node *next;
     struct list_head *nlist;

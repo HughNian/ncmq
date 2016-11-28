@@ -193,14 +193,16 @@ class NcmqSocketModel
     	
     	return $response;
     }
-
+    
     public function error_message()
     {
         return $this->emsg;
     }
     
+    
     public function __destruct()
     {
      	socket_close($this->conn);
-    } 
+    }
+    
 }
