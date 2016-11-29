@@ -331,8 +331,6 @@ class IndexController extends BaseController
    				foreach($times as $val){
    					if($day == $val['time']){
    						$cacheChart[$key] = ++$i;
-   					} else {
-   						$cacheChart[$key] = 0;
    					}
    				}
    			}
@@ -353,8 +351,6 @@ class IndexController extends BaseController
    				foreach($times as $val){
    					if($day == $val['time']){
    						$queueChart[$key] = ++$i;
-   					} else {
-   						$queueChart[$key] = 0;
    					}
    				}
    			}
