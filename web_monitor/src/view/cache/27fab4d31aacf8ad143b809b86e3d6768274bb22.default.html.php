@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-28 11:12:25
+/* Smarty version 3.1.30, created on 2016-12-26 17:18:19
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/default.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_583ba09933e7f7_04100213',
+  'unifunc' => 'content_5860e05b98bfb6_56974922',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_583ba09933e7f7_04100213 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5860e05b98bfb6_56974922 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -68,7 +68,7 @@ var GV = {
 				<li><em>PHP版本</em> <span>7.0.9</span></li>
 				<li><em>服务器端信息</em> <span>Linux niansong-VirtualBox 3.13.0-32-generic #57-Ubuntu SMP Tue Jul 15 03:51:12 UTC 2014 i686</span>
 				</li>
-				<li><em>最大上传限制</em> <span>2M</span></li>
+				<li><em>最大上传限制</em> <span>100M</span></li>
 				<li><em>最大执行时间</em> <span>30 seconds</span>
 				</li>
 			</ul>

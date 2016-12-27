@@ -6,7 +6,7 @@ class NcmqSocketModel
     private $conn;
     private $emsg;
     
-    public function __construct($host = '192.168.241.44', $port = '21666')
+    public function __construct($host = '127.0.0.1', $port = '21666')
     {
     	$this->conn = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     	
