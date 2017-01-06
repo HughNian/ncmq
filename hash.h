@@ -11,6 +11,7 @@
 typedef unsigned long int ub4;
 typedef unsigned char ub1;
 
+#define d_hash_delete(hash_table, key) hash_delete(hash_table, key, -1)
 #define KEY_SIZE 32
 
 typedef struct {
@@ -41,7 +42,7 @@ typedef void (*print_hash)(Hash_Node *node, int index);
 Hash_Table *hash_init(int skey);
 int hash_insert(Hash_Table *hash_table, char *key, void *data);
 int hash_find(Hash_Table *hash_table, char *key, void **val);
-int hash_delete(Hash_Table *hash_table, char *key);
+int hash_delete(Hash_Table *hash_table, char *key, int nkey);
 int hash_update(Hash_Table *hash_table, char *key, void *new);
 void hash_foreach(Hash_Table *hash_table, print_hash handler);
 void hash_destory(Hash_Table *hash_table);

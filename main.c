@@ -718,19 +718,26 @@ command_get_cache(C *client)
 void
 command_del_cache(C *client)
 {
-	int ret;
+	int ret, dnkey;
 	void *res;
-	int keysize;
-	char *key;
+	int keysize, nkeysize;
+	char *key, *nkey;
 
 	keysize = client->carrs[1].len+1;
 	key = (char *)nmalloc(keysize);
 	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
+	nkeysize = client->carrs[2].len+1;
+	nkey = (char *)nmalloc(nkeysize);
+	memset(nkey, 0, nkeysize);
+	memcpy(nkey, client->carrs[2].val, client->carrs[2].len);
+	dnkey = atoi(nkey);
+	nfree(nkey);
+
 	res = "DELETE SUCCESS\r\n";
 
-	if(hash_delete(STORAGE_DATA.cacheData, key) < 0){
+	if(hash_delete(STORAGE_DATA.cacheData, key, dnkey) < 0){
 		res = "DELETE FAILED\r\n";
 	}
 
@@ -825,8 +832,8 @@ command_dequeue(C *client)
 			goto RESULT;
 		}
 		res = json_encode4Node(dequeue);
-		hash_delete(STORAGE_DATA.queueData, key);
-		hash_delete(queue_time_key, key);
+		d_hash_delete(STORAGE_DATA.queueData, key);
+		d_hash_delete(queue_time_key, key);
 		del_skiplist_node(queue, queuekey);
 	}
 
