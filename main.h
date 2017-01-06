@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
 #include <sys/socket.h>
@@ -25,6 +26,7 @@
 #include "skiplist.h"
 #include "cJSON.h"
 
+#define VERSION "0.0.1"
 #define SERVER_PORT 21666
 #define EPOLL_EVENTS_NUMS 500
 #define EPOLL_WAIT_NUMS 30

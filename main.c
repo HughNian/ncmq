@@ -10,6 +10,7 @@ static C *client_array[CLIENT_ARRAY_SIZE];
 static struct _storage_data STORAGE_DATA;
 static sl *queue = NULL;
 static Hash_Table *queue_time_key;
+int s_port = SERVER_PORT;
 
 void command_set_cache(C *client);
 void command_get_cache(C *client);
@@ -32,6 +33,19 @@ command_opts copts[] = {
 	{"get_c_keys", command_get_c_keys, 0},
 	{"get_c_nodes", command_get_c_nodes, 0}
 };
+
+static void
+show_help(void)
+{
+	char *help = "************************* d^_^b **************************\n"
+			     "* ncmq is a CACHE & MQ SERVER SYSTEM version " VERSION " *\n"
+		         "* -h is show help                                        *\n"
+			     "* -d to be daemon                                        *\n"
+				 "* -p is port default is (21666)                          *\n"
+				 "************************ hughnian ************************\n";
+
+	fprintf(stderr, "%s", help);
+}
 
 int
 set_nonblocking(int sock)
@@ -106,7 +120,7 @@ init_server()
     memset(&(serv.serveraddr), 0, sizeof(serv.serveraddr));
     serv.serveraddr.sin_family = AF_INET;
     serv.serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv.serveraddr.sin_port = htons(SERVER_PORT);
+    serv.serveraddr.sin_port = htons(s_port);
 
     if(bind(serv.sfd, (struct sockaddr *)&(serv.serveraddr), sizeof(serv.serveraddr)) < 0){
     	fprintf(stderr, "bind failed msg (%s)\n", strerror(errno));
@@ -592,6 +606,32 @@ server_loop()
 int
 main(int argc, char **argv)
 {
+	int c;
+	int todaemon = 0;
+	while(-1 != (c = getopt(argc, argv, "h:d:p:"))) {
+	    switch(c){
+	    	case 'h':
+	    		show_help();
+	    		break;
+	    	case 'd':
+	    		todaemon = atoi(optarg);
+	    		break;
+	    	case 'p':
+	    		s_port = atoi(optarg);
+	    		break;
+	    	default:
+	    		show_help();
+	    		return 0;
+	    }
+	}
+
+	if(todaemon){
+		if(daemon(0, 0) == -1){
+			fprintf(stderr, "failed to be a daemon\n");
+			exit(1);
+		}
+	}
+
 	if(init_server() < 0){
 		fprintf(stderr, "server failed!\n");
 		return 0;
@@ -613,6 +653,7 @@ command_set_cache(C *client)
 
     keysize = client->carrs[1].len+1;
     key = (char *)nmalloc(keysize);
+    memset(key, 0, keysize);
     memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
     memcpy(overdue, client->carrs[2].val, sizeof(client->carrs[2].val));
@@ -625,6 +666,7 @@ command_set_cache(C *client)
     char *data;
     if(client->rsize > 0){
     	data = (char *)nmalloc(client->rsize);
+    	memset(data, 0, client->rsize);
     	client->data_size = client->rsize;
     	memcpy(data, client->rbuf, client->rsize);
     }
@@ -633,8 +675,6 @@ command_set_cache(C *client)
 		res = "cache hash insert failed\r\n";
 		goto RESULT;
 	}
-
-	Hash_Node *queue;
 
     overtime += atoi(overdue);
 
@@ -661,6 +701,7 @@ command_get_cache(C *client)
 
 	keysize = client->carrs[1].len+1;
 	key = (char *)nmalloc(keysize);
+	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
 	ret = hash_find(STORAGE_DATA.cacheData, key, &res);
@@ -684,6 +725,7 @@ command_del_cache(C *client)
 
 	keysize = client->carrs[1].len+1;
 	key = (char *)nmalloc(keysize);
+	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
 	res = "DELETE SUCCESS\r\n";
@@ -711,6 +753,7 @@ command_enqueue(C *client)
 
 	keysize = client->carrs[1].len+1;
 	key = (char *)nmalloc(keysize);
+	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
 	if(client->re_read){
@@ -721,6 +764,7 @@ command_enqueue(C *client)
 	char *data;
 	if(client->rsize > 0){
 		data = (char *)nmalloc(client->rsize);
+		memset(data, 0, client->rsize);
 		client->data_size = client->rsize;
 		memcpy(data, client->rbuf, client->rsize);
 	}
@@ -766,6 +810,7 @@ command_dequeue(C *client)
 
 	keysize = client->carrs[1].len+1;
 	key = (char *)nmalloc(keysize);
+	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
 	ret = hash_find(queue_time_key, key, &qkey);
@@ -884,6 +929,7 @@ command_get_c_nodes(C *client)
 
 	keysize = client->carrs[1].len+1;
 	key = (char *)nmalloc(keysize);
+	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
 	h = get_hash(key, strlen(key));

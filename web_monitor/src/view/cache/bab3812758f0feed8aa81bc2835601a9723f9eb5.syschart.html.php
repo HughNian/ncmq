@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-12-26 17:18:24
+/* Smarty version 3.1.30, created on 2017-01-06 14:13:02
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/syschart.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5860e060510423_25142494',
+  'unifunc' => 'content_586f356ee88f02_92569745',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_5860e060510423_25142494 (Smarty_Internal_Template $_smarty_tpl) {
+function content_586f356ee88f02_92569745 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -98,7 +98,7 @@ $(function(){
 				}
 			 ];
 	 
-	var labels = ["2016-12-26","2016-12-27","2016-12-28","2016-12-29","2016-12-30","2016-12-31","2017-01-01"];
+	var labels = ["2017-01-02","2017-01-03","2017-01-04","2017-01-05","2017-01-06","2017-01-07","2017-01-08"];
 	var line = new iChart.LineBasic2D({
 		render : 'canvasDiv',
 		data: data,

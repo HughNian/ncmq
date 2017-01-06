@@ -178,12 +178,12 @@ class IndexController extends BaseController
     	$ncmqSocket = M('NcmqSocket');
     	 
     	$queueJson = $ncmqSocket->mqueue();
-    	
+
     	$return = array();
-    	 
+    	
     	if($queueJson){
     		$queueArr = json_decode($queueJson, 1);
-    	
+    		
     		$data = array();
     		$i = 1;
     		foreach($queueArr as $val){
