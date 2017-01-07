@@ -2,12 +2,16 @@
 defined('APP_PATH') or die('No direct access allowed.');
 
 class NcmqSocketModel
-{
+{	
     private $conn;
     private $emsg;
     
     public function __construct($host = '127.0.0.1', $port = '21666')
     {
+    	$cmq = C('cmq');
+    	$host = $host ? $host : $cmq['host'];
+    	$port = $port ? $port : $cmq['port'];
+    	
     	$this->conn = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     	
     	if($this->conn < 0){
@@ -118,6 +122,30 @@ class NcmqSocketModel
     }
     
     /**
+     * 删除缓存，包括删除某个key值下所有缓存数据，以及删除某个key值指定的缓存数据
+     * 
+     */
+    public function del($name, $nkey = '-1')
+    {
+    	$response = '';
+    	
+    	$cmd = "del $name $nkey\r\n";
+    	if(!socket_write($this->conn, $cmd, strlen($cmd))){
+    		$this->emsg = 'socket write failed';
+    		return $response;
+    	}
+    	
+    	$size = socket_read($this->conn, 128, PHP_NORMAL_READ);
+    	
+    	if($size > 0){
+    		usleep(500);
+    		$response = socket_read($this->conn, intval($size)+10);
+    	}
+    	
+    	return $response;
+    }
+    
+    /**
      * 消费队列
      * 
      */
@@ -199,8 +227,7 @@ class NcmqSocketModel
         return $this->emsg;
     }
     
-    
-    public function __destruct()
+	public function __destruct()
     {
      	socket_close($this->conn);
     }

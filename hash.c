@@ -106,6 +106,7 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
     	fprintf(stderr, "hash node malloc failed\n");
     	return -1;
     }
+    memset(hash_node, 0, sizeof(Hash_Node));
     hash_node->index = index;
     hash_node->h  = h;
     hash_node->add_time = time(&add_time);
@@ -116,6 +117,7 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
     	fprintf(stderr, "hash node kv malloc failed\n");
     	return -1;
     }
+    memset(hash_node->kv, 0, sizeof(Key_Val)+KEY_SIZE);
     key_size = strlen(key);
     if(key_size > KEY_SIZE){
     	nfree(hash_node->kv);
@@ -126,6 +128,7 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
 
     hash_node->kv->dsize = strlen(data) + 1;
     hash_node->kv->data = (char *)nmalloc(hash_node->kv->dsize);
+    memset(hash_node->kv->data, 0, hash_node->kv->dsize);
     memcpy(hash_node->kv->data, data, hash_node->kv->dsize);
     memcpy(hash_node->kv->key, key, key_size+1);
     hash_node->kv->key[key_size] = '\0';
@@ -190,8 +193,8 @@ hash_delete(Hash_Table *hash_table, char *key, int nkey)
     }
 
     node = hash_table->hashs[index];
-    while(node && (strncmp(node->kv->key, key, klen) != 0)){
-    	if(nlen == nkey && nkey != -1) break;
+    while(node && (strncmp(node->kv->key, key, klen) == 0)){
+    	if(nlen == nkey) break;
     	prev = node;
     	node = node->next;
     	nlen++;

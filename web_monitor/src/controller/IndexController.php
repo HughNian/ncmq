@@ -148,7 +148,7 @@ class IndexController extends BaseController
     				$up_time = $val[$cid]['up_time'] ? date('Y-m-d H:i:s', $val[$cid]['up_time']) : '--';
     				$cache = $val[$cid]['data'];
     				if(is_array($cache)) $cache = json_encode($cache);
-    				array_push($return, array('id' => $id . $cid, 'pId' => $id, 'key' => $key, 'name' => "[id:$cid|key:$key]", 'cache' => $cache, 'add_time' => $add_time, 'up_time' => $up_time));
+    				array_push($return, array('id' => $id . $cid, 'cid' => $cid, 'pId' => $id, 'key' => $key, 'name' => "[id:$cid|key:$key]", 'cache' => $cache, 'add_time' => $add_time, 'up_time' => $up_time));
     			}
     			$i++;
     		}
@@ -202,7 +202,7 @@ class IndexController extends BaseController
     				$up_time = $val[$cid]['up_time'] ? date('Y-m-d H:i:s', $val[$cid]['up_time']) : '--';
     				$queue = $val[$cid]['data'];
     				if(is_array($queue)) $queue = json_encode($queue);
-    				array_push($return, array('id' => $id . $cid, 'pId' => $id, 'key' => $key, 'name' => "[id:$cid|key:$key]", 'queue' => $queue, 'add_time' => $add_time, 'up_time' => $up_time));
+    				array_push($return, array('id' => $id . $cid, 'cid' => $cid, 'pId' => $id, 'key' => $key, 'name' => "[id:$cid|key:$key]", 'queue' => $queue, 'add_time' => $add_time, 'up_time' => $up_time));
     			}
     			$i++;
     		}
@@ -247,7 +247,7 @@ class IndexController extends BaseController
    		$overtime = $this->postp('overtime');
    		
    		if(!$name || !$cache){
-   			redirect('/Index/managercache', 3, "提交参数不正确", 2);
+   			redirect('/Index/addcache', 3, "提交参数不正确", 2);
    		}
    		
    		if(!$overtime || !preg_match('/^0-9$/', $overtime)) $overtime = 0;
@@ -261,6 +261,30 @@ class IndexController extends BaseController
    		} else {
    			redirect('/Index/managercache', 3, "添加失败", 2);
    		}
+   	}
+   	
+   	/**
+   	 * 删除缓存
+   	 * 
+   	 */
+   	public function delcache()
+   	{
+   		if(!$this->checkLogin())
+   			redirect('/Index/index');
+
+   		$name = $_GET['name'];
+   		$nkey = $_GET['nkey'];
+   		
+   		$ncmqSocket = M('NcmqSocket');
+   		 
+   		$ret = $ncmqSocket->del($name, (string)$nkey);
+   		 
+   		if($ret){
+   			redirect('/Index/mcache', 3, "删除成功");
+   		} else {
+   			redirect('/Index/mcache', 3, "删除失败", 2);
+   		}
+   		
    	}
    	
    	/**

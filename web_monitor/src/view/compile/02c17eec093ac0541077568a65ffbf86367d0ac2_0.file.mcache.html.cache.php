@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2016-11-25 17:18:38
+/* Smarty version 3.1.30, created on 2017-01-07 13:43:58
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_583801ee5825a9_66085363',
+  'unifunc' => 'content_5870801edad6b8_86019977',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '02c17eec093ac0541077568a65ffbf86367d0ac2' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html',
-      1 => 1480065516,
+      1 => 1483767825,
       2 => 'file',
     ),
   ),
@@ -22,8 +22,8 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../Common/footer.html' => 1,
   ),
 ),false)) {
-function content_583801ee5825a9_66085363 (Smarty_Internal_Template $_smarty_tpl) {
-$_smarty_tpl->compiled->nocache_hash = '1606159123583801ee542230_21321565';
+function content_5870801edad6b8_86019977 (Smarty_Internal_Template $_smarty_tpl) {
+$_smarty_tpl->compiled->nocache_hash = '2786102005870801ed2e954_22802137';
 ?>
 <!doctype html>
 <html>
@@ -63,10 +63,11 @@ $_smarty_tpl->compiled->nocache_hash = '1606159123583801ee542230_21321565';
 						<thead>
 							<tr>
 								<td width="6%">id</td>
-								<td width="12%">缓存key</td>
+								<td width="12%">缓存key <span id="delall"></span> </td>
 								<td width="15%">添加时间</td>
 								<td width="15%">更新时间</td>
 								<td>缓存数据</td>
+								<td width="10%">操作</td>
 							</tr>
 						</thead>
 						<tbody id="J_tag_list">
@@ -76,6 +77,7 @@ $_smarty_tpl->compiled->nocache_hash = '1606159123583801ee542230_21321565';
 							<td id="add_time"></td>
 							<td id="up_time"></td>
 							<td id="content"></td>
+							<td id="operate"></td>
 						</tr>
 						</tbody>
 					</table>
@@ -120,7 +122,8 @@ var setting = {
 				return false;
 			} else {
 				var id  = treeNode.id;
-				var pid = treeNode.pid;
+				var pid = treeNode.pId;
+				var cid = treeNode.cid;
 				var key = treeNode.key;
 				var add_time = treeNode.add_time;
 				var up_time = treeNode.up_time;
@@ -131,6 +134,13 @@ var setting = {
 				$("#cache").find('#add_time').html(add_time);
 				$("#cache").find('#up_time').html(up_time);
 				$("#cache").find('#content').html(content);
+				var delUrl = "/index/delcache?name="+key+"&nkey="+cid;
+				var delLink = "<a href="+delUrl+">删除</a>"
+				$("#cache").find("#operate").html(delLink);
+				
+				var delAllUrl = "/index/delcache?name="+key+"&nkey=-1";
+				var delAllLink = "[<a href="+delAllUrl+">删除</a>]";
+				$("#cache").find("#delall").html(delAllLink);
 				return true;
 			}
 		},

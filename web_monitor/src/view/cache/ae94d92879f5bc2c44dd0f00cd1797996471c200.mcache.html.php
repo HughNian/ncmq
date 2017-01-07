@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-01-06 17:41:38
+/* Smarty version 3.1.30, created on 2017-01-07 14:58:12
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_586f66525133e1_55202420',
+  'unifunc' => 'content_58709184b7c012_25007322',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '02c17eec093ac0541077568a65ffbf86367d0ac2' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html',
-      1 => 1480065516,
+      1 => 1483767825,
       2 => 'file',
     ),
     'f7ce84368a45b02340e74d6629d48f66e7e3e607' => 
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_586f66525133e1_55202420 (Smarty_Internal_Template $_smarty_tpl) {
+function content_58709184b7c012_25007322 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -88,10 +88,11 @@ var GV = {
 						<thead>
 							<tr>
 								<td width="6%">id</td>
-								<td width="12%">缓存key</td>
+								<td width="12%">缓存key <span id="delall"></span> </td>
 								<td width="15%">添加时间</td>
 								<td width="15%">更新时间</td>
 								<td>缓存数据</td>
+								<td width="10%">操作</td>
 							</tr>
 						</thead>
 						<tbody id="J_tag_list">
@@ -101,6 +102,7 @@ var GV = {
 							<td id="add_time"></td>
 							<td id="up_time"></td>
 							<td id="content"></td>
+							<td id="operate"></td>
 						</tr>
 						</tbody>
 					</table>
@@ -139,7 +141,8 @@ var setting = {
 				return false;
 			} else {
 				var id  = treeNode.id;
-				var pid = treeNode.pid;
+				var pid = treeNode.pId;
+				var cid = treeNode.cid;
 				var key = treeNode.key;
 				var add_time = treeNode.add_time;
 				var up_time = treeNode.up_time;
@@ -150,13 +153,20 @@ var setting = {
 				$("#cache").find('#add_time').html(add_time);
 				$("#cache").find('#up_time').html(up_time);
 				$("#cache").find('#content').html(content);
+				var delUrl = "/index/delcache?name="+key+"&nkey="+cid;
+				var delLink = "<a href="+delUrl+">删除</a>"
+				$("#cache").find("#operate").html(delLink);
+				
+				var delAllUrl = "/index/delcache?name="+key+"&nkey=-1";
+				var delAllLink = "[<a href="+delAllUrl+">删除</a>]";
+				$("#cache").find("#delall").html(delAllLink);
 				return true;
 			}
 		},
 	}
 };
 
-var zNodes = [{"id":1,"pId":0,"name":"key","cache":""},{"id":"10","pId":1,"key":"key","name":"[id:0|key:key]","cache":"yayayayayayayayaayyayaya2222","add_time":"2017-01-06 17:40:19","up_time":"--"},{"id":"11","pId":1,"key":"key","name":"[id:1|key:key]","cache":"hahahahahaha1111","add_time":"2017-01-06 17:40:08","up_time":"--"}];
+var zNodes = [{"id":1,"pId":0,"name":"333333333333","cache":""},{"id":"10","cid":0,"pId":1,"key":"333333333333","name":"[id:0|key:333333333333]","cache":"333333333333333333333333333333333333333333333333333333333333333333333222222222","add_time":"2017-01-07 14:55:12","up_time":"--"},{"id":2,"pId":0,"name":"2222222222","cache":""},{"id":"20","cid":0,"pId":2,"key":"2222222222","name":"[id:0|key:2222222222]","cache":"222222222222222222222222222222222222222222222222222222222222222222222222222222","add_time":"2017-01-07 14:55:03","up_time":"--"}];
 
 $(document).ready(function(){
 	var t = $("#tree");

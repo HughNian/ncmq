@@ -88,6 +88,24 @@ class NcmqModel
     }
     
     /**
+     * 删除缓存
+     * 
+     */
+    public function del($name, $nkey = -1)
+    {
+    	fwrite($this->conn, "del $name $nkey\r\n");
+    	
+    	$response = '';
+    	$size = 0;
+    	$size = (int)fgets($this->conn);
+    	if($size > 0){
+    		$response = fread($this->conn, $size);
+    	}
+    	 
+    	return $response;
+    }
+    
+    /**
      * 消费队列
      * 
      */
