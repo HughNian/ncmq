@@ -278,8 +278,8 @@ class IndexController extends BaseController
    		$ncmqSocket = M('NcmqSocket');
    		 
    		$ret = $ncmqSocket->del($name, (string)$nkey);
-   		 
-   		if($ret){
+   		
+   		if(strstr($ret, 'SUCCESS')){
    			redirect('/Index/mcache', 3, "删除成功");
    		} else {
    			redirect('/Index/mcache', 3, "删除失败", 2);

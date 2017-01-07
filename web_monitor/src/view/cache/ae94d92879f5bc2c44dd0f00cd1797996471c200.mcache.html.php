@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-01-07 14:58:12
+/* Smarty version 3.1.30, created on 2017-01-07 16:19:53
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_58709184b7c012_25007322',
+  'unifunc' => 'content_5870a4a97313b7_14354774',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_58709184b7c012_25007322 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5870a4a97313b7_14354774 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -166,7 +166,7 @@ var setting = {
 	}
 };
 
-var zNodes = [{"id":1,"pId":0,"name":"333333333333","cache":""},{"id":"10","cid":0,"pId":1,"key":"333333333333","name":"[id:0|key:333333333333]","cache":"333333333333333333333333333333333333333333333333333333333333333333333222222222","add_time":"2017-01-07 14:55:12","up_time":"--"},{"id":2,"pId":0,"name":"2222222222","cache":""},{"id":"20","cid":0,"pId":2,"key":"2222222222","name":"[id:0|key:2222222222]","cache":"222222222222222222222222222222222222222222222222222222222222222222222222222222","add_time":"2017-01-07 14:55:03","up_time":"--"}];
+var zNodes = [{"id":1,"pId":0,"name":"key","cache":""},{"id":"10","cid":0,"pId":1,"key":"key","name":"[id:0|key:key]","cache":"111111111111111","add_time":"2017-01-07 16:19:43","up_time":"--"},{"id":2,"pId":0,"name":"KEY","cache":""},{"id":"20","cid":0,"pId":2,"key":"KEY","name":"[id:0|key:KEY]","cache":"22222222222222222","add_time":"2017-01-07 16:19:50","up_time":"--"}];
 
 $(document).ready(function(){
 	var t = $("#tree");
