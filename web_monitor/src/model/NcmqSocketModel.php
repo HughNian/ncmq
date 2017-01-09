@@ -39,7 +39,8 @@ class NcmqSocketModel
     		return $response;
     	}
     	usleep(500);
-    	if(!socket_write($this->conn, $data, strlen($data))){
+    	$insert = "$data\r\n";
+    	if(!socket_write($this->conn, $insert, strlen($insert))){
     		$this->emsg = 'socket write2 failed';
     		return $response;
     	}

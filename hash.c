@@ -158,7 +158,7 @@ hash_find(Hash_Table *hash_table, char *key, void **val)
 
     while(hash_node){
     	if(hash_node->index == index){
-    		if(strncmp(hash_node->kv->key, key, strlen(key)) == 0){
+    		if(strcmp(hash_node->kv->key, key) == 0){
     			*val = hash_node->kv->data;
     			break;
     		} else {
@@ -180,7 +180,7 @@ hash_find(Hash_Table *hash_table, char *key, void **val)
 int
 hash_delete(Hash_Table *hash_table, char *key, int nkey)
 {
-	int klen,nlen = 0;
+	int klen,nlen = 0,dNodeNum = 0;
     unsigned long int index,h;
     Hash_Node *node,*next,*prev = NULL;
 
@@ -193,8 +193,17 @@ hash_delete(Hash_Table *hash_table, char *key, int nkey)
     }
 
     node = hash_table->hashs[index];
-    while(node && (strncmp(node->kv->key, key, klen) == 0)){
+    //while(node && (strcmp(node->kv->key, key)) == 0))
+    while(node){
+    	if(nkey == -1){
+    		if(strcmp(node->kv->key, key) != 0){
+    			prev = node;
+    			node = node->next;
+    		}
+    	}
     	if(nlen == nkey) break;
+    	if(!node->next) break;
+
     	prev = node;
     	node = node->next;
     	nlen++;

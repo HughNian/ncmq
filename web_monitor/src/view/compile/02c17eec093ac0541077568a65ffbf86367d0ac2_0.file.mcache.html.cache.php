@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-01-07 13:43:58
+/* Smarty version 3.1.30, created on 2017-01-09 15:25:52
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5870801edad6b8_86019977',
+  'unifunc' => 'content_58733b0001be15_68433476',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '02c17eec093ac0541077568a65ffbf86367d0ac2' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html',
-      1 => 1483767825,
+      1 => 1483946642,
       2 => 'file',
     ),
   ),
@@ -22,8 +22,8 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../Common/footer.html' => 1,
   ),
 ),false)) {
-function content_5870801edad6b8_86019977 (Smarty_Internal_Template $_smarty_tpl) {
-$_smarty_tpl->compiled->nocache_hash = '2786102005870801ed2e954_22802137';
+function content_58733b0001be15_68433476 (Smarty_Internal_Template $_smarty_tpl) {
+$_smarty_tpl->compiled->nocache_hash = '172930508958733affef24f9_31715517';
 ?>
 <!doctype html>
 <html>
@@ -125,6 +125,7 @@ var setting = {
 				var pid = treeNode.pId;
 				var cid = treeNode.cid;
 				var key = treeNode.key;
+				var nkey = treeNode.nkey;
 				var add_time = treeNode.add_time;
 				var up_time = treeNode.up_time;
 				var content = treeNode.cache;
@@ -134,7 +135,7 @@ var setting = {
 				$("#cache").find('#add_time').html(add_time);
 				$("#cache").find('#up_time').html(up_time);
 				$("#cache").find('#content').html(content);
-				var delUrl = "/index/delcache?name="+key+"&nkey="+cid;
+				var delUrl = "/index/delcache?name="+key+"&nkey="+nkey;
 				var delLink = "<a href="+delUrl+">删除</a>"
 				$("#cache").find("#operate").html(delLink);
 				

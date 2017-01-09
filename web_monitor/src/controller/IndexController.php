@@ -135,9 +135,10 @@ class IndexController extends BaseController
     		foreach($cacheArr as $k => $val){
     			$key = key($val);
     			$value = current($val);
-    			$data[$key][] = array('data' => $value, 'add_time' => $val['add_time'], 'up_time' => $val['up_time']);
+    			$data[$key][] = array('data' => $value, 'nkey'=> $val['nkey'], 'add_time' => $val['add_time'], 'up_time' => $val['up_time']);
     		}
-    		
+//     		echo '<pre />';
+//     		print_r($cacheArr);die;
     		$return = array();
     		foreach($data as $key => $val){
     			$id = $i;
@@ -147,8 +148,9 @@ class IndexController extends BaseController
     				$add_time = $val[$cid]['add_time'] ? date('Y-m-d H:i:s', $val[$cid]['add_time']) : '--';
     				$up_time = $val[$cid]['up_time'] ? date('Y-m-d H:i:s', $val[$cid]['up_time']) : '--';
     				$cache = $val[$cid]['data'];
+    				$nkey = $val[$cid]['nkey'];
     				if(is_array($cache)) $cache = json_encode($cache);
-    				array_push($return, array('id' => $id . $cid, 'cid' => $cid, 'pId' => $id, 'key' => $key, 'name' => "[id:$cid|key:$key]", 'cache' => $cache, 'add_time' => $add_time, 'up_time' => $up_time));
+    				array_push($return, array('id' => $id . $cid, 'cid' => $cid, 'pId' => $id, 'key' => $key, 'nkey'=>$nkey, 'name' => "[id:$cid|key:$key]", 'cache' => $cache, 'add_time' => $add_time, 'up_time' => $up_time));
     			}
     			$i++;
     		}

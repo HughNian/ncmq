@@ -404,7 +404,7 @@ json_encode4Hash(Hash_Table *hash_table)
 {
     cJSON *jsonRoot = NULL;
     cJSON *subJson = NULL;
-    int i;
+    int i, nkey;
     Hash_Node *node;
     char *ret, key[hash_table->hash_size];
 
@@ -428,6 +428,8 @@ json_encode4Hash(Hash_Table *hash_table)
 			}
         	sprintf(key, "%d%d", i, n);
         	cJSON_AddStringToObject(subJson, node->kv->key, (char *)node->kv->data);
+        	nkey = n-1;
+        	cJSON_AddNumberToObject(subJson, "nkey", nkey);
         	cJSON_AddNumberToObject(subJson, "add_time", node->add_time);
         	cJSON_AddNumberToObject(subJson, "up_time", node->up_time);
         	cJSON_AddItemToObject(jsonRoot, key, subJson);

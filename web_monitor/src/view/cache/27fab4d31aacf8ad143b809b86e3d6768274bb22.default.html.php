@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-01-07 16:12:42
+/* Smarty version 3.1.30, created on 2017-01-09 17:51:50
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/default.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5870a2fac5d3b9_27580352',
+  'unifunc' => 'content_58735d36701409_61812589',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_5870a2fac5d3b9_27580352 (Smarty_Internal_Template $_smarty_tpl) {
+function content_58735d36701409_61812589 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>

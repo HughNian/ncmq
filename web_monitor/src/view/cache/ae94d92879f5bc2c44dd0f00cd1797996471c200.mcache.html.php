@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-01-07 16:19:53
+/* Smarty version 3.1.30, created on 2017-01-09 17:40:09
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5870a4a97313b7_14354774',
+  'unifunc' => 'content_58735a79266207_46377809',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '02c17eec093ac0541077568a65ffbf86367d0ac2' => 
     array (
       0 => '/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html',
-      1 => 1483767825,
+      1 => 1483946642,
       2 => 'file',
     ),
     'f7ce84368a45b02340e74d6629d48f66e7e3e607' => 
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_5870a4a97313b7_14354774 (Smarty_Internal_Template $_smarty_tpl) {
+function content_58735a79266207_46377809 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -144,6 +144,7 @@ var setting = {
 				var pid = treeNode.pId;
 				var cid = treeNode.cid;
 				var key = treeNode.key;
+				var nkey = treeNode.nkey;
 				var add_time = treeNode.add_time;
 				var up_time = treeNode.up_time;
 				var content = treeNode.cache;
@@ -153,7 +154,7 @@ var setting = {
 				$("#cache").find('#add_time').html(add_time);
 				$("#cache").find('#up_time').html(up_time);
 				$("#cache").find('#content').html(content);
-				var delUrl = "/index/delcache?name="+key+"&nkey="+cid;
+				var delUrl = "/index/delcache?name="+key+"&nkey="+nkey;
 				var delLink = "<a href="+delUrl+">删除</a>"
 				$("#cache").find("#operate").html(delLink);
 				
@@ -166,7 +167,7 @@ var setting = {
 	}
 };
 
-var zNodes = [{"id":1,"pId":0,"name":"key","cache":""},{"id":"10","cid":0,"pId":1,"key":"key","name":"[id:0|key:key]","cache":"111111111111111","add_time":"2017-01-07 16:19:43","up_time":"--"},{"id":2,"pId":0,"name":"KEY","cache":""},{"id":"20","cid":0,"pId":2,"key":"KEY","name":"[id:0|key:KEY]","cache":"22222222222222222","add_time":"2017-01-07 16:19:50","up_time":"--"}];
+var zNodes = [{"id":1,"pId":0,"name":"key0","cache":""},{"id":"10","cid":0,"pId":1,"key":"key0","nkey":0,"name":"[id:0|key:key0]","cache":"11111111111111111111111111111111\r\n5555\r\n","add_time":"2017-01-09 17:39:43","up_time":"--"},{"id":2,"pId":0,"name":"key","cache":""},{"id":"20","cid":0,"pId":2,"key":"key","nkey":1,"name":"[id:0|key:key]","cache":"3333333333333333333333333333\r\n\r\n","add_time":"2017-01-09 17:39:22","up_time":"--"},{"id":"21","cid":1,"pId":2,"key":"key","nkey":2,"name":"[id:1|key:key]","cache":"11111111111111111111111111\r\n","add_time":"2017-01-09 17:39:01","up_time":"--"}];
 
 $(document).ready(function(){
 	var t = $("#tree");
