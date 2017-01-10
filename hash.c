@@ -142,7 +142,7 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
 }
 
 int
-hash_find(Hash_Table *hash_table, char *key, void **val)
+hash_find_val(Hash_Table *hash_table, char *key, void **val)
 {
     unsigned long int index,h;
     h = get_hash(key, strlen(key));
@@ -177,10 +177,43 @@ hash_find(Hash_Table *hash_table, char *key, void **val)
     return 0;
 }
 
+void *
+hash_find_node(Hash_Table *hash_table, char *key)
+{
+	unsigned long int index,h;
+	h = get_hash(key, strlen(key));
+	index = h % hash_table->hash_size;
+
+	if(!hash_table->hashs[index])
+		return NULL;
+
+	Hash_Node *hash_node, *node, *n;
+	hash_node = hash_table->hashs[index];
+
+	while(hash_node){
+		if(hash_node->index == index){
+			if(strcmp(hash_node->kv->key, key) == 0){
+				node = hash_node;
+				break;
+			} else {
+				node = NULL;
+			}
+		} else {
+			return NULL;
+		}
+		n = hash_node->next;
+		hash_node = n;
+	}
+
+	if(NULL == node) return NULL;
+
+	return (void *)node;
+}
+
 int
 hash_delete(Hash_Table *hash_table, char *key, int nkey)
 {
-	int klen,nlen = 0,dNodeNum = 0;
+	int klen,nlen = 0;
     unsigned long int index,h;
     Hash_Node *node,*next,*prev = NULL;
 
@@ -193,14 +226,8 @@ hash_delete(Hash_Table *hash_table, char *key, int nkey)
     }
 
     node = hash_table->hashs[index];
-    //while(node && (strcmp(node->kv->key, key)) == 0))
     while(node){
-    	if(nkey == -1){
-    		if(strcmp(node->kv->key, key) != 0){
-    			prev = node;
-    			node = node->next;
-    		}
-    	}
+    	if((nkey == -1 || nkey == -2) && !(strcmp(node->kv->key, key))) break;
     	if(nlen == nkey) break;
     	if(!node->next) break;
 
@@ -224,7 +251,7 @@ hash_delete(Hash_Table *hash_table, char *key, int nkey)
     hash_table->hash_nums--;
 
     if(nkey == -1){
-    	if(hash_delete(hash_table, key, nkey) == -1); //递归彻底删除所有该key值的节点
+    	if(hash_delete(hash_table, key, nkey) == -1)
     		return 0;
     }
 

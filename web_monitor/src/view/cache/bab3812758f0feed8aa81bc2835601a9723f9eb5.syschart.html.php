@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-01-06 14:13:02
+/* Smarty version 3.1.30, created on 2017-01-10 15:23:42
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/syschart.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_586f356ee88f02_92569745',
+  'unifunc' => 'content_58748bfe95b8b4_15805144',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_586f356ee88f02_92569745 (Smarty_Internal_Template $_smarty_tpl) {
+function content_58748bfe95b8b4_15805144 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -82,11 +82,11 @@ var GV = {
 <script type="text/javascript" src="/public/js/ichart.latest.min.js"></script>
 <script type="text/javascript">
 $(function(){
-	console.log([0,0,0,0,0,0,0]);
+	console.log([0,1,0,0,0,0,0]);
 	var data = [
 				{
 					name : 'Cache',
-					value: [0,0,0,0,0,0,0],
+					value: [0,1,0,0,0,0,0],
 					color:'#0d8ecf',
 					line_width:2
 				},
@@ -98,7 +98,7 @@ $(function(){
 				}
 			 ];
 	 
-	var labels = ["2017-01-02","2017-01-03","2017-01-04","2017-01-05","2017-01-06","2017-01-07","2017-01-08"];
+	var labels = ["2017-01-09","2017-01-10","2017-01-11","2017-01-12","2017-01-13","2017-01-14","2017-01-15"];
 	var line = new iChart.LineBasic2D({
 		render : 'canvasDiv',
 		data: data,

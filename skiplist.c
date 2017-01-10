@@ -35,6 +35,7 @@ init_skiplist(o_type flag)
 		fprintf(stderr, "malloc skiplist failed msg(%s)\n", strerror(errno));
 		return NULL;
 	}
+	memset(skiplist, 0, sizeof(sl));
 
 	switch(flag){
 		case ORDER_BY_MIN:
@@ -54,6 +55,7 @@ init_skiplist(o_type flag)
 		fprintf(stderr, "malloc node failed msg(%s)\n", strerror(errno));
 		return NULL;
 	}
+	memset(skiplist->root, 0, sizeof(sl_node) + MAX_LEVEL * sizeof(sl_node *));
 
 	for(i = 0; i < MAX_LEVEL; i++){
 		skiplist->root->forward[i] = NULL;
@@ -91,6 +93,7 @@ add_skiplist_node(sl *skiplist, int key, void *val)
     	fprintf(stderr, "new node malloc failed msg(%s)\n", strerror(errno));
     	return -1;
     }
+    memset(new, 0, sizeof(*new) + new_level * sizeof(sl_node *));
     new->key = key;
     new->val = val;
     for(i = 0; i <= new_level; i++){

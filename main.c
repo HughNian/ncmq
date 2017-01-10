@@ -200,6 +200,7 @@ init_client(int cfd)
 		}
 
 		client->rbuf   = nmalloc(DEFAULT_DATA_SIZE);
+		memset(client->rbuf, 0, DEFAULT_DATA_SIZE);
 		client->rlimit = DEFAULT_DATA_SIZE;
 	}
 
@@ -668,7 +669,7 @@ command_set_cache(C *client)
     char *data;
     if(client->rsize > 0){
     	data = (char *)nmalloc(client->rsize);
-    	memset(data, 0, client->rsize);
+    	memset(data, 0, strlen(data));
     	client->data_size = client->rsize;
     	memcpy(data, client->rbuf, client->rsize);
     }
@@ -706,7 +707,7 @@ command_get_cache(C *client)
 	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
-	ret = hash_find(STORAGE_DATA.cacheData, key, &res);
+	ret = hash_find_val(STORAGE_DATA.cacheData, key, &res);
 	if(ret == -1){
 		res = "NOT FOUND\r\n";
 	}
@@ -755,6 +756,7 @@ command_enqueue(C *client)
 	int ret, keysize, queuekey;
 	unsigned long int index, h;
 	char *key, *res;
+	void *find_ret;
 	Hash_Node *find_queue;
 	time_t t;
 	t = time(NULL);
@@ -783,9 +785,12 @@ command_enqueue(C *client)
 		goto RESULT;
 	}
 
-	h = get_hash(key, strlen(key));
-	index = h % STORAGE_DATA.queueData->hash_size;
-	find_queue = STORAGE_DATA.queueData->hashs[index];
+	find_ret = hash_find_node(STORAGE_DATA.queueData, key);
+	if(NULL == find_ret){
+		res = "queue hash insert after find failed\r\n";
+		goto RESULT;
+	}
+	find_queue = (Hash_Node *)find_ret;
 
 	if(add_skiplist_node(queue, queuekey, find_queue) != 0){
 		res = "enqueue queue failed\r\n";
@@ -822,7 +827,7 @@ command_dequeue(C *client)
 	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
-	ret = hash_find(queue_time_key, key, &qkey);
+	ret = hash_find_val(queue_time_key, key, &qkey);
 	if(ret == -1){
 		res = "QUEUE NOT FOUND\r\n";
 		goto RESULT;
