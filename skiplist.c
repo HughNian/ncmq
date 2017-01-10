@@ -121,12 +121,13 @@ del_skiplist_node(sl *skiplist, int key)
     	update[i] = x;
     }
 
-    del = x->forward[0];
-    if(del == NULL || del->key != key){
+    x = x->forward[0];
+    if(x == NULL || x->key != key){
     	return -1;
     }
 
     for(i = 0; i <= skiplist->level; i++){
+    	if(update[i]->forward[i] != x) break;
     	update[i]->forward[i] = update[i]->forward[i]->forward[i];
     }
 
