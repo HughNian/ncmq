@@ -757,7 +757,7 @@ command_enqueue(C *client)
 	unsigned long int index, h;
 	char *key, *res;
 	void *find_ret;
-	Hash_Node *find_queue;
+	Hash_Node *find_queue, *queue_node;
 	time_t t;
 	t = time(NULL);
 	queuekey = time(&t);
@@ -785,14 +785,19 @@ command_enqueue(C *client)
 		goto RESULT;
 	}
 
-	find_ret = hash_find_node(STORAGE_DATA.queueData, key);
+    find_ret = hash_find_node(STORAGE_DATA.queueData, key);
 	if(NULL == find_ret){
 		res = "queue hash insert after find failed\r\n";
 		goto RESULT;
 	}
 	find_queue = (Hash_Node *)find_ret;
 
-	if(add_skiplist_node(queue, queuekey, find_queue) != 0){
+	queue_node = (Hash_Node *)nmalloc(sizeof(Hash_Node));
+	memset(queue_node, 0, sizeof(Hash_Node));
+	memcpy(queue_node, find_queue, sizeof(Hash_Node));
+	queue_node->next = NULL;
+
+	if(add_skiplist_node(queue, queuekey, queue_node) != 0){
 		res = "enqueue queue failed\r\n";
 		goto RESULT;
 	}
@@ -808,9 +813,6 @@ RESULT:
 	free(client->response);
 	client->return_size = strlen(res);
 	client->response    = strdup(res);
-
-	nfree(key);
-	nfree(data);
 }
 
 void

@@ -401,4 +401,24 @@ class IndexController extends BaseController
     	
     	redirect('/Index/index');
     }
+
+    public function test()
+    {
+    	$caceh = array(
+    		'key' => array('11111111111111111111', '22222222222222222', '3333333333333333', '55555555555555', '6666666'),
+    		'key0' => array('11111111111111111111', '22222222222222222', '3333333333333333', '55555555555555', '6666666'),
+    		'key00' => array('11111111111111111111', '22222222222222222', '3333333333333333'),
+    	);
+    	
+    	$ncmqSocket = M('NcmqSocket');
+    	
+    	foreach($caceh as $key => $vals){
+    		foreach($vals as $val){
+    			//$ncmqSocket->set($key, 0, $val);
+    			$ncmqSocket->enqueue($key, $val);
+    		}
+    	}
+    	
+    	die('OK');
+    }
 }

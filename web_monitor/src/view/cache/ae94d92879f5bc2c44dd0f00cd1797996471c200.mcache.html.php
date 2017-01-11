@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-01-10 15:07:00
+/* Smarty version 3.1.30, created on 2017-01-11 13:31:02
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/mcache.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_587488141fe9f4_16615738',
+  'unifunc' => 'content_5875c316cdfdf8_12480147',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_587488141fe9f4_16615738 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5875c316cdfdf8_12480147 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -72,7 +72,45 @@ var GV = {
 			<li>每个key值分类下为相应的key值数据的队列，一般缓存取key值为队列第一个元素数据</li>
 		</ol>
 	</div>
-			<div class="not_content_mini"><i></i>啊哦，没有数据！</div>
+		<div class="table_list">
+		<table width="100%">
+			<thead>
+				<tr>
+					<td width="18%">key值</td>
+					<td>缓存数据表</td>
+				</tr>
+			</thead>
+			<tbody id="J_tag_list">
+			<tr>
+				<td id="tree" class="ztree" style="width:260px; overflow:auto;"></td>
+				<td id="cache">
+					<table width="100%">
+						<thead>
+							<tr>
+								<td width="6%">id</td>
+								<td width="12%">缓存key <span id="delall"></span> </td>
+								<td width="15%">添加时间</td>
+								<td width="15%">更新时间</td>
+								<td>缓存数据</td>
+								<td width="10%">操作</td>
+							</tr>
+						</thead>
+						<tbody id="J_tag_list">
+						<tr>
+							<td id="id"></td>
+							<td id="key"></td>
+							<td id="add_time"></td>
+							<td id="up_time"></td>
+							<td id="content"></td>
+							<td id="operate"></td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
 	</div>
 <script src="/public/js/admin/pages/common/common.js?v20130702"></script>
 </body>
@@ -129,7 +167,7 @@ var setting = {
 	}
 };
 
-var zNodes = ;
+var zNodes = [{"id":1,"pId":0,"name":"key","cache":""},{"id":"10","cid":0,"pId":1,"key":"key","nkey":0,"name":"[id:0|key:key]","cache":"11111111111111111111\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"11","cid":1,"pId":1,"key":"key","nkey":1,"name":"[id:1|key:key]","cache":"22222222222222222\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"12","cid":2,"pId":1,"key":"key","nkey":2,"name":"[id:2|key:key]","cache":"3333333333333333\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"13","cid":3,"pId":1,"key":"key","nkey":3,"name":"[id:3|key:key]","cache":"55555555555555\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"14","cid":4,"pId":1,"key":"key","nkey":4,"name":"[id:4|key:key]","cache":"6666666\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":2,"pId":0,"name":"key00","cache":""},{"id":"20","cid":0,"pId":2,"key":"key00","nkey":0,"name":"[id:0|key:key00]","cache":"3333333333333333\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"21","cid":1,"pId":2,"key":"key00","nkey":1,"name":"[id:1|key:key00]","cache":"22222222222222222\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"22","cid":2,"pId":2,"key":"key00","nkey":2,"name":"[id:2|key:key00]","cache":"11111111111111111111\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":3,"pId":0,"name":"key0","cache":""},{"id":"30","cid":0,"pId":3,"key":"key0","nkey":0,"name":"[id:0|key:key0]","cache":"6666666\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"31","cid":1,"pId":3,"key":"key0","nkey":1,"name":"[id:1|key:key0]","cache":"55555555555555\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"32","cid":2,"pId":3,"key":"key0","nkey":2,"name":"[id:2|key:key0]","cache":"3333333333333333\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"33","cid":3,"pId":3,"key":"key0","nkey":3,"name":"[id:3|key:key0]","cache":"11111111111111111111\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"},{"id":"34","cid":4,"pId":3,"key":"key0","nkey":4,"name":"[id:4|key:key0]","cache":"22222222222222222\r\n","add_time":"2017-01-11 12:36:45","up_time":"--"}];
 
 $(document).ready(function(){
 	var t = $("#tree");

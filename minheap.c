@@ -53,6 +53,7 @@ init_mheap()
 {
 	mheap.data = (void **)nmalloc(sizeof(void *) * DEFAULT_HEAP_SIZE);
 	if(NULL == mheap.data) return -1;
+	memset(mheap.data, 0, sizeof(void *) * DEFAULT_HEAP_SIZE);
 	mheap.size = 0;
 	mheap.max_size = DEFAULT_HEAP_SIZE;
 	mheap.comp = key_comp;
@@ -65,6 +66,7 @@ add_mheap(int key, void *val, int tag)
 {
 	dval *dv;
     dv = (dval *)nmalloc(sizeof(*dv));
+    memset(dv, 0, sizeof(*dv));
     if(tag == 1){
     	dv->key   = key;
     	dv->size  = strlen(val)+1;
@@ -134,6 +136,7 @@ resize_mheap(int new_size)
     void **newData;
     newData = (void **)nmalloc(sizeof(void *) * new_size);
     if(NULL == newData) return -1;
+    memset(newData, 0, sizeof(void *) * new_size);
 
     memcpy(newData, mheap.data, sizeof(void *) * ((mheap.size)));
     nfree(mheap.data);

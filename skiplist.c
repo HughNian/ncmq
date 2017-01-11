@@ -111,7 +111,7 @@ del_skiplist_node(sl *skiplist, int key)
 {
     int i;
     sl_node *update[MAX_LEVEL];
-    sl_node *x,*del;
+    sl_node *x;
 
     x = skiplist->root;
     for(i = 0; i <= skiplist->level; i++){
@@ -131,7 +131,7 @@ del_skiplist_node(sl *skiplist, int key)
     	update[i]->forward[i] = update[i]->forward[i]->forward[i];
     }
 
-    nfree(del);
+    nfree(x);
 
     if(skiplist->level > 0 && (skiplist->root->forward[skiplist->level] == NULL)){
     	skiplist->level--;
@@ -202,7 +202,7 @@ find_skiplist_by_key(sl *skiplist, int key, void **rec)
     sl_node *x = skiplist->root;
 
     for(i = skiplist->level; i >= 0; i--) {
-        while (x->forward[i] != skiplist->root
+        while (x->forward[i] != NULL
           && skiplist->comp(x->forward[i]->key, key))
             x = x->forward[i];
     }
