@@ -114,7 +114,7 @@ del_skiplist_node(sl *skiplist, int key)
     sl_node *x;
 
     x = skiplist->root;
-    for(i = 0; i <= skiplist->level; i++){
+    for(i = skiplist->level; i >= 0; i--){
     	while(x->forward[i] != NULL && skiplist->comp(x->forward[i]->key, key)){
     		x = x->forward[i];
     	}

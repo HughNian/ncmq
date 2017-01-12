@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-01-11 11:05:31
+/* Smarty version 3.1.30, created on 2017-01-12 15:46:28
   from "/home/niansong/C/test/ncmq/web_monitor/src/view/Index/syschart.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_5875a0fbecff38_33717017',
+  'unifunc' => 'content_58773454a0bee6_41555225',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -30,7 +30,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 60,
 ),true)) {
-function content_5875a0fbecff38_33717017 (Smarty_Internal_Template $_smarty_tpl) {
+function content_58773454a0bee6_41555225 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!doctype html>
 <html>
@@ -82,17 +82,17 @@ var GV = {
 <script type="text/javascript" src="/public/js/ichart.latest.min.js"></script>
 <script type="text/javascript">
 $(function(){
-	console.log([0,0,13,0,0,0,0]);
+	console.log([0,0,0,2,0,0,0]);
 	var data = [
 				{
 					name : 'Cache',
-					value: [0,0,13,0,0,0,0],
+					value: [0,0,0,2,0,0,0],
 					color:'#0d8ecf',
 					line_width:2
 				},
 				{
 					name : 'Queue',
-					value: [0,0,13,0,0,0,0],
+					value: [0,0,0,63,0,0,0],
 					color: '#ef7707',
 					line_width:2
 				}

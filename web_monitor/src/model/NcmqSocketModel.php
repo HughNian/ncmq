@@ -13,6 +13,8 @@ class NcmqSocketModel
     	$port = $port ? $port : $cmq['port'];
     	
     	$this->conn = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+    	socket_set_option($this->conn, SOL_SOCKET,SO_RCVTIMEO, array("sec"=>10, "usec"=>0 ));
+    	socket_set_option($this->conn, SOL_SOCKET,SO_SNDTIMEO, array("sec"=>10, "usec"=>0 ));
     	
     	if($this->conn < 0){
     		$this->emsg = 'socket create failed';
@@ -191,6 +193,7 @@ class NcmqSocketModel
     	
     	if($size > 0){
     		usleep(500);
+    		//socket_set_option($this->conn, SOL_SOCKET, SO_RCVTIMEO, array("sec"=>10, "usec"=>0));
     		$response = socket_read($this->conn, intval($size)+10);
     	}
     	

@@ -247,15 +247,15 @@ read_client(C *client)
     	client->rnum = read(client->cfd, buf, DEFAULT_DATA_SIZE);
     	switch(client->rnum){
     		case -1:
-    			if(errno == EAGAIN || errno == EWOULDBLOCK){
-    				continue;
-    			} else {
-    				fprintf(stderr, "client read error msg1 (%s)\n", strerror(errno));
+    			if(errno != EAGAIN && errno != EWOULDBLOCK){
+    				fprintf(stderr, "client read error msg1 (%s), code (%d)\n", strerror(errno), errno);
     				goto failed;
     				return -1;
+    			} else {
+    				continue;
     			}
     		case 0:
-    			fprintf(stderr, "client read error msg2 (%s)\n", strerror(errno));
+    			fprintf(stderr, "client read error msg2 (%s), code (%d)\n", strerror(errno), errno);
     			goto failed;
     			return -1;
     		default:
