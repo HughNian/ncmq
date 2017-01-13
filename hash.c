@@ -213,9 +213,9 @@ hash_find_node(Hash_Table *hash_table, char *key, int flag)
 int
 hash_delete(Hash_Table *hash_table, char *key, int nkey)
 {
-	int klen,nlen = 0;
+	int klen,nlen = 0,common_key_nums = 0;
     unsigned long int index,h;
-    Hash_Node *node,*next,*prev = NULL;
+    Hash_Node *node,*_node,*next,*prev = NULL;
 
     klen = strlen(key);
     h = get_hash(key, klen);
@@ -225,11 +225,20 @@ hash_delete(Hash_Table *hash_table, char *key, int nkey)
     	return -1;
     }
 
+    if(nkey == -2){
+    	_node = hash_table->hashs[index];
+    	while(_node){
+    		if(!strcmp(_node->kv->key, key)) common_key_nums++;
+    		_node = _node->next;
+    	}
+    }
+
     node = hash_table->hashs[index];
     while(node){
-    	if((nkey == -1) && !(strcmp(node->kv->key, key))) break;
-    	if((nkey == -2) && !(strcmp(node->kv->key, key))){
-    		if(!node->next) break;
+    	if((nkey == -1) && !strcmp(node->kv->key, key)) break;
+    	if((nkey == -2) && !strcmp(node->kv->key, key)){
+    		common_key_nums--;
+    		if(common_key_nums == 0) break;
     	}
     	if(nlen == nkey) break;
     	if(!node->next) break;
