@@ -247,7 +247,7 @@ read_client(C *client)
     	client->rnum = read(client->cfd, buf, DEFAULT_DATA_SIZE);
     	switch(client->rnum){
     		case -1:
-    			if(errno != EAGAIN && errno != EWOULDBLOCK){
+    			if(errno != EAGAIN && errno != EWOULDBLOCK && errno != 104){
     				fprintf(stderr, "client read error msg1 (%s), code (%d)\n", strerror(errno), errno);
     				goto failed;
     				return -1;
@@ -674,10 +674,17 @@ command_set_cache(C *client)
     	memcpy(data, client->rbuf, client->rsize);
     }
 
-	if(hash_insert(STORAGE_DATA.cacheData, key, data) == -1){
-		res = "cache hash insert failed\r\n";
-		goto RESULT;
-	}
+    if(!d_hash_find_node(STORAGE_DATA.cacheData, key)){
+    	if(hash_insert(STORAGE_DATA.cacheData, key, data) == -1){
+    			res = "cache hash insert failed\r\n";
+    			goto RESULT;
+    	}
+    } else {
+    	if(hash_update(STORAGE_DATA.cacheData, key, data) == -1){
+    	    	res = "cache hash insert failed\r\n";
+    	    	goto RESULT;
+    	}
+    }
 
     overtime += atoi(overdue);
 
@@ -707,7 +714,7 @@ command_get_cache(C *client)
 	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
-	ret = hash_find_val(STORAGE_DATA.cacheData, key, &res);
+	ret = d_hash_find_val(STORAGE_DATA.cacheData, key, &res);
 	if(ret == -1){
 		res = "NOT FOUND\r\n";
 	}
@@ -785,7 +792,7 @@ command_enqueue(C *client)
 		goto RESULT;
 	}
 
-    find_ret = hash_find_node(STORAGE_DATA.queueData, key);
+    find_ret = d_hash_find_node(STORAGE_DATA.queueData, key);
 	if(NULL == find_ret){
 		res = "queue hash insert after find failed\r\n";
 		goto RESULT;
@@ -829,7 +836,7 @@ command_dequeue(C *client)
 	memset(key, 0, keysize);
 	memcpy(key, client->carrs[1].val, client->carrs[1].len);
 
-	ret = hash_find_val(queue_time_key, key, &qkey);
+	ret = hash_find_val(queue_time_key, key, &qkey, 2);
 	if(ret == -1){
 		res = "QUEUE NOT FOUND\r\n";
 		goto RESULT;

@@ -142,7 +142,7 @@ hash_insert(Hash_Table *hash_table, char *key, void *data)
 }
 
 int
-hash_find_val(Hash_Table *hash_table, char *key, void **val)
+hash_find_val(Hash_Table *hash_table, char *key, void **val, int flag)
 {
     unsigned long int index,h;
     h = get_hash(key, strlen(key));
@@ -160,7 +160,7 @@ hash_find_val(Hash_Table *hash_table, char *key, void **val)
     	if(hash_node->index == index){
     		if(strcmp(hash_node->kv->key, key) == 0){
     			*val = hash_node->kv->data;
-    			break;
+    			if(flag == 1) break;
     		} else {
     			*val = NULL;
     		}
@@ -178,7 +178,7 @@ hash_find_val(Hash_Table *hash_table, char *key, void **val)
 }
 
 void *
-hash_find_node(Hash_Table *hash_table, char *key)
+hash_find_node(Hash_Table *hash_table, char *key, int flag)
 {
 	unsigned long int index,h;
 	h = get_hash(key, strlen(key));
@@ -194,7 +194,7 @@ hash_find_node(Hash_Table *hash_table, char *key)
 		if(hash_node->index == index){
 			if(strcmp(hash_node->kv->key, key) == 0){
 				node = hash_node;
-				break;
+				if(flag == 1) break;
 			} else {
 				node = NULL;
 			}
@@ -227,7 +227,10 @@ hash_delete(Hash_Table *hash_table, char *key, int nkey)
 
     node = hash_table->hashs[index];
     while(node){
-    	if((nkey == -1 || nkey == -2) && !(strcmp(node->kv->key, key))) break;
+    	if((nkey == -1) && !(strcmp(node->kv->key, key))) break;
+    	if((nkey == -2) && !(strcmp(node->kv->key, key))){
+    		if(!node->next) break;
+    	}
     	if(nlen == nkey) break;
     	if(!node->next) break;
 

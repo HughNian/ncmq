@@ -1,17 +1,11 @@
 <?php
-defined('APP_PATH') or die('No direct access allowed.');
-
 class NcmqSocketModel
 {	
     private $conn;
     private $emsg;
     
     public function __construct($host = '127.0.0.1', $port = '21666')
-    {
-    	$cmq = C('cmq');
-    	$host = $host ? $host : $cmq['host'];
-    	$port = $port ? $port : $cmq['port'];
-    	
+    {	
     	$this->conn = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     	socket_set_option($this->conn, SOL_SOCKET,SO_RCVTIMEO, array("sec"=>10, "usec"=>0 ));
     	socket_set_option($this->conn, SOL_SOCKET,SO_SNDTIMEO, array("sec"=>10, "usec"=>0 ));
