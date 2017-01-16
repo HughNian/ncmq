@@ -51,13 +51,13 @@ int
 set_nonblocking(int sock)
 {
 	int flag;
-	flag = fcntl(sock, F_GETFL);
-	if(flag < 0){
+	flag = fcntl(sock, F_GETFL, 0);
+	if(flag == -1){
 		fprintf(stderr, "fcntl error msg(%s)\n", strerror(errno));
 		return -1;
 	}
 
-	if(fcntl(sock, F_SETFL, flag | O_NONBLOCK) < 0){
+	if(fcntl(sock, F_SETFL, flag | O_NONBLOCK) == -1){
 		fprintf(stderr, "fcntl error msg(%s)\n", strerror(errno));
 		return -1;
 	}
@@ -122,13 +122,13 @@ init_server()
     serv.serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv.serveraddr.sin_port = htons(s_port);
 
-    if(bind(serv.sfd, (struct sockaddr *)&(serv.serveraddr), sizeof(serv.serveraddr)) < 0){
+    if(bind(serv.sfd, (struct sockaddr *)&(serv.serveraddr), sizeof(serv.serveraddr)) == -1){
     	fprintf(stderr, "bind failed msg (%s)\n", strerror(errno));
     	close(serv.sfd);
     	return -1;
     }
 
-    if(listen(serv.sfd, LISTEN_Q) < 0){
+    if(listen(serv.sfd, LISTEN_Q) == -1){
     	fprintf(stderr, "listen failed msg (%s)\n", strerror(errno));
     	close(serv.sfd);
     	return -1;
