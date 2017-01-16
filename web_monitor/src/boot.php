@@ -50,10 +50,10 @@ function start()
 {
     spl_autoload_register('loader');
     // 设定错误和异常处理
-    register_shutdown_function('ExceptionHelper::fatalError');
-    set_error_handler('ExceptionHelper::appError');
-    set_exception_handler('ExceptionHelper::appException');
-   	
+    //register_shutdown_function('ExceptionHelper::fatalError');
+    //set_error_handler('ExceptionHelper::appError');
+    //set_exception_handler('ExceptionHelper::appException');
+    
 	/*     
 	//apache服务器时，打开此处
 	//访问url为，http://xxxxx/Index/index?id=1
@@ -92,7 +92,7 @@ function start()
     
     //控制器
     $Controller = ucfirst($CON) . 'Controller';
-    
+   	
     //执行程序
     $run = new $Controller();
     $run->$ACT($G);
