@@ -8,7 +8,7 @@
 * dlist
 
 ## USAGE
-*添加数据  
+* 添加数据  
 
 set key 1   
 
@@ -23,7 +23,7 @@ SET OK
    
 
 
-*获取数据   
+* 获取数据   
 
 get key  
 
