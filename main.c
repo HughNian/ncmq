@@ -40,11 +40,19 @@ show_help(void)
 	char *help = "************************* d^_^b **************************\n"
 			     "* ncmq is a CACHE & MQ SERVER SYSTEM version " VERSION " *\n"
 		         "* -h is show help                                        *\n"
+				 "* -v is show version                                     *\n"
 			     "* -d to be daemon                                        *\n"
 				 "* -p is port default is (21666)                          *\n"
 				 "************************ hughnian ************************\n";
 
 	fprintf(stderr, "%s", help);
+}
+
+static void
+show_version(void)
+{
+	char *version = "ncmq version " VERSION "\n";
+	fprintf(stderr, "%s", version);
 }
 
 int
@@ -611,10 +619,15 @@ main(int argc, char **argv)
 {
 	int c;
 	int todaemon = 0;
-	while(-1 != (c = getopt(argc, argv, "h:d:p:"))) {
+	while(-1 != (c = getopt(argc, argv, "hvdp:"))) {
 	    switch(c){
 	    	case 'h':
 	    		show_help();
+	    		return 1;
+	    		break;
+	    	case 'v':
+	    		show_version();
+	    		return 1;
 	    		break;
 	    	case 'd':
 	    		todaemon = atoi(optarg);
@@ -624,7 +637,7 @@ main(int argc, char **argv)
 	    		break;
 	    	default:
 	    		show_help();
-	    		return 0;
+	    		return 1;
 	    }
 	}
 
