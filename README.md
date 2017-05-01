@@ -31,4 +31,8 @@ get key
 
 hahahhaha   
 
+## EFFECT
+![img1](https://github.com/HughNian/ncmq/blob/master/img1.png)  
+![img2](https://github.com/HughNian/ncmq/blob/master/img2.png)   
+![img3](https://github.com/HughNian/ncmq/blob/master/img3.png)   
 
